@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "incremental": true,
+    "module": "commonjs",
+    "target": "ES2022",
+    "lib": ["DOM", "ES2022"],
+    "types": ["node", "jest"],
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "inlineSources": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": false,
+    "declaration": true
+  },
+  "include": [
+    "./src/**/*",
+    "./test/**/*"
+  ],
+  "exclude": [
+  ]
+}
+
+

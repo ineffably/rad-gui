@@ -58,3 +58,4 @@ export declare class GUI {
     controllersRecursive(): any[];
     foldersRecursive(): any[];
 }
+export default GUI;

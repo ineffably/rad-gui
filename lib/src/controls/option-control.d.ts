@@ -8,3 +8,4 @@ export default class OptionControl extends BaseControl {
     options(options: any): this;
     update(): this;
 }
+export { OptionControl };

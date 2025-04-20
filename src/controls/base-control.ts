@@ -4,6 +4,7 @@ import { el } from '../utils/el';
  * BaseControl is the foundation class for all controllers
  * It provides common functionality for managing values, DOM elements,
  * event handling, and state management that all specific controller types use
+ * @displayName BaseControl
  */
 export default class BaseControl {
   /** Parent GUI instance */
@@ -332,3 +333,5 @@ export default class BaseControl {
 	}
 
 }
+
+export { BaseControl };

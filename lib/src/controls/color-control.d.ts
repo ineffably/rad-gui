@@ -14,3 +14,4 @@ export default class ColorControl extends BaseControl {
     load(value: any): this;
     update(): this;
 }
+export { ColorControl };

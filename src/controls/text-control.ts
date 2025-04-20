@@ -2,6 +2,7 @@ import { el } from '../utils/el';
 import BaseControl from './base-control';
 
 /**
+ * @displayName TextControl
  * Controller for string values with a text input interface
  * Provides a text input field for editing string values
  */
@@ -48,3 +49,6 @@ export default class TextControl extends BaseControl {
   }
 
 }
+
+export { TextControl };
+

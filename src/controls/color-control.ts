@@ -4,6 +4,9 @@ import { el } from '../utils/el';
 import getColorFormat from '../utils/color-formats';
 import normalizeColorString from '../utils/normalize-color-string';
 
+/**
+ * @displayName ColorControl
+ */
 export default class ColorControl extends BaseControl {
   $input: HTMLInputElement;
   $text: HTMLInputElement;
@@ -101,4 +104,6 @@ export default class ColorControl extends BaseControl {
     return this;
   }
 }
+
+export { ColorControl };
 

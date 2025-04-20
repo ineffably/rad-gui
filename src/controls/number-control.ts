@@ -5,6 +5,9 @@ import { el } from '../utils/el';
 const DRAG_THRESHOLD = 5;
 const WHEEL_DEBOUNCE_TIME = 400;
 
+/**
+ * @displayName NumberControl
+ */
 export default class NumberControl extends BaseControl {
 	// Properties
 	_decimals: any;
@@ -376,3 +379,6 @@ export default class NumberControl extends BaseControl {
 	// Property to store debounce timeout
 	private _wheelFinishTimeout: any;
 }
+
+export { NumberControl };
+

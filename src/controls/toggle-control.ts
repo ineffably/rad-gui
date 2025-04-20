@@ -2,6 +2,7 @@ import BaseControl from './base-control';
 import { el } from '../utils/el';
 
 /**
+ * @displayName ToggleControl
  * Controller for boolean values with a checkbox interface
  * Provides a simple checkbox input to toggle between true and false
  */
@@ -40,3 +41,6 @@ export default class ToggleControl extends BaseControl {
 	}
 
 }
+
+export { ToggleControl };
+

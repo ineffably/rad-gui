@@ -125,6 +125,23 @@ describe('OptionControl', () => {
       // Should call update
       expect(optionControl.update).toHaveBeenCalled();
     });
+
+    it('should set textContent property on option elements', () => {
+      optionControl = new OptionControl(mockParent, testObj, 'selectedOption', arrayOptions);
+      
+      // Check that each option's textContent matches the correct name
+      Array.from(optionControl.$select.options).forEach((option, index) => {
+        expect((option as HTMLOptionElement).textContent).toBe(arrayOptions[index]);
+      });
+      
+      // Test with object options
+      optionControl.options(objectOptions);
+      
+      // Check each option has the correct key as textContent
+      Array.from(optionControl.$select.options).forEach((option, index) => {
+        expect((option as HTMLOptionElement).textContent).toBe(Object.keys(objectOptions)[index]);
+      });
+    });
   });
 
   describe('update method', () => {

@@ -504,3 +504,5 @@ export class GUI {
   }
 
 }
+
+export default GUI;

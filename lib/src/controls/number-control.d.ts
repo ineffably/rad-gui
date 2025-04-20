@@ -47,3 +47,4 @@ export default class NumberControl extends BaseControl {
     _mapRange(v: any, a: any, b: any, c: any, d: any): any;
     private _wheelFinishTimeout;
 }
+export { NumberControl };

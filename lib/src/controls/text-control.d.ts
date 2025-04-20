@@ -4,3 +4,4 @@ export default class TextControl extends BaseControl {
     constructor(parent: any, object: any, property: any);
     update(): this;
 }
+export { TextControl };

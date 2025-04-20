@@ -42,3 +42,4 @@ export default class BaseControl {
     save(): any;
     destroy(): void;
 }
+export { BaseControl };

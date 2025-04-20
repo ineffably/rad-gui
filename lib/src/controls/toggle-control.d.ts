@@ -4,3 +4,4 @@ export default class ToggleControl extends BaseControl {
     constructor(parent: any, object: any, property: any);
     update(): this;
 }
+export { ToggleControl };

@@ -36,6 +36,16 @@
   --dark-color-ts-variable: #fbbf24;
 }
 
+/* Remove redundant page title */
+.tsd-page-title {
+  display: none !important;
+}
+
+/* Hide duplicate headers on index page */
+.tsd-index-panel h3:first-child {
+  display: none;
+}
+
 /* Improved headers */
 .tsd-page-title h1 {
   font-size: 3rem !important;
@@ -165,4 +175,75 @@ td {
 /* Dark mode refinements */
 .tsd-theme-dark .tsd-signature {
   background-color: var(--dark-color-background-secondary) !important;
+}
+
+/* Fix for default export names in hierarchy */
+#controls_base-control\.default > a > svg + span::after {
+  content: "BaseControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_base-control\.default > a > svg + span {
+  opacity: 0;
+}
+
+#controls_color-control\.default > a > svg + span::after {
+  content: "ColorControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_color-control\.default > a > svg + span {
+  opacity: 0;
+}
+
+#controls_function-control\.default > a > svg + span::after {
+  content: "FunctionControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_function-control\.default > a > svg + span {
+  opacity: 0;
+}
+
+#controls_number-control\.default > a > svg + span::after {
+  content: "NumberControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_number-control\.default > a > svg + span {
+  opacity: 0;
+}
+
+#controls_option-control\.default > a > svg + span::after {
+  content: "OptionControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_option-control\.default > a > svg + span {
+  opacity: 0;
+}
+
+#controls_text-control\.default > a > svg + span::after {
+  content: "TextControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_text-control\.default > a > svg + span {
+  opacity: 0;
+}
+
+#controls_toggle-control\.default > a > svg + span::after {
+  content: "ToggleControl";
+  display: inline-block;
+  position: absolute;
+}
+
+#controls_toggle-control\.default > a > svg + span {
+  opacity: 0;
 } 

@@ -4,6 +4,7 @@ import { el } from '../utils/el';
 /**
  * Controller for function values with a button interface
  * Provides a button that calls the function when clicked
+ * @displayName FunctionControl
  */
 export default class FunctionControl extends BaseControl {
   /** The button element used to trigger the function */
@@ -33,3 +34,5 @@ export default class FunctionControl extends BaseControl {
 	}
 
 }
+
+export { FunctionControl };

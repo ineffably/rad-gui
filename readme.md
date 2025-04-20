@@ -64,6 +64,15 @@ const folder = gui.addFolder('Advanced Settings');
 folder.add(params, 'x').step(5).name('X (Step 5)');
 ```
 
+## 📚 Documentation
+
+<div align="center">
+  <h3><a href="usage.md">📖 Complete Usage Guide</a></h3>
+  <p>Step-by-step tutorials, best practices, and advanced usage examples</p>
+</div>
+
+For API details and reference information, visit the [API Reference](https://yourproject.github.io/rad-gui/).
+
 ## 📋 Available Controls
 
 RAD-GUI supports various control types based on the parameter's value and provided options:
@@ -101,10 +110,6 @@ Object.entries(darkTheme).forEach(([key, value]) => {
 });
 ```
 
-## 📚 Documentation
-
-For detailed documentation, visit the [API Reference](https://yourproject.github.io/rad-gui/) or check the [Usage Guide](usage.md).
-
 ## 📝 Examples
 
 Explore more examples in the `examples` directory:
@@ -128,4 +133,3 @@ npm run test
 # View demo
 npm run local:kitchen-sink
 ```
-

@@ -77,7 +77,9 @@ export const el = <T extends keyof HTMLElementTagNameMap>(
 ) => {
   const element = document.createElement(tagName) as HTMLElementTagNameMap[T];
 
-  element.classList.add(...classList);
+  if(Array.isArray(classList)) {
+    classList.filter(cls => cls).forEach(cls => element.classList.add(cls));
+  }
 
   Object.entries(props).forEach(([key, value]) => element[key] = value as any);
   

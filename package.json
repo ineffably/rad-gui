@@ -21,7 +21,7 @@
     "docs": "typedoc --entryPoints readme.md usage.md src/**/*.ts --entryPointStrategy expand",
     "local": "webpack-dev-server --mode=development --open",
     "local:example": "webpack-dev-server --mode=development --env template=examples/index.example.html",
-    "local:kitchen-sink": "webpack-dev-server --mode=development --env template=examples/kitchen-sink/index.html",
+    "local:kitchen-sink": "webpack-dev-server --mode=development --open examples/kitchen-sink/index.html",
     "local:compat": "webpack-dev-server --mode=development --env template=examples/dat-gui-compat.html"
   },
   "keywords": [],
@@ -42,6 +42,8 @@
     "ts-jest": "^29.3.2",
     "ts-loader": "^9.5.2",
     "typedoc": "^0.28.3",
+    "typedoc-plugin-markdown": "^4.6.2",
+    "typedoc-plugin-pages": "^1.1.0",
     "typescript": "^5.8.2",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",

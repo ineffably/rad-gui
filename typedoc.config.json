@@ -1,0 +1,43 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./src/index.ts",
+    "./src/gui.ts",
+    "./src/controls/*.ts",
+    "./src/utils/*.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "name": "Rad-GUI Documentation",
+  "includeVersion": true,
+  "readme": "readme.md",
+  "githubPages": true,
+  "exclude": ["**/node_modules/**", "**/test/**"],
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "excludeInternal": false,
+  "excludeExternals": false,
+  "categorizeByGroup": true,
+  "categoryOrder": ["GUI", "Controls", "Utilities", "*"],
+  "sort": ["visibility", "alphabetical"],
+  "searchInComments": true,
+  "customCss": "./custom.css",
+  "sidebarLinks": {
+    "Usage Guide": "usage.md",
+    "GitHub": "https://github.com/username/rad-gui"
+  },
+  "navigationLinks": {
+    "Usage Guide": "usage.md",
+    "Examples": "./examples/kitchen-sink/index.html"
+  },
+  "visibilityFilters": {
+    "protected": true,
+    "private": true,
+    "inherited": true,
+    "external": true
+  },
+  "darkHighlightTheme": "github-dark",
+  "lightHighlightTheme": "github-light",
+  "tsconfig": "./tsconfig.json",
+  "theme": "default"
+} 

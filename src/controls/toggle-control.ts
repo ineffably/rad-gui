@@ -1,9 +1,20 @@
 import BaseControl from './base-control';
 import { el } from '../utils/el';
 
+/**
+ * Controller for boolean values with a checkbox interface
+ * Provides a simple checkbox input to toggle between true and false
+ */
 export default class ToggleControl extends BaseControl {
+  /** The checkbox input element */
   $input: HTMLInputElement;
 
+  /**
+   * Creates a new toggle controller
+   * @param parent - The parent GUI instance
+   * @param object - Object containing the property to control
+   * @param property - Name of the boolean property to control
+   */
 	constructor( parent, object, property ) {
 		super( parent, object, property, 'boolean', 'label' );
     
@@ -19,6 +30,10 @@ export default class ToggleControl extends BaseControl {
 		this.update();
 	}
 
+  /**
+   * Updates the checkbox state to reflect the current value
+   * @returns This controller instance (for chaining)
+   */
 	update() {
 		this.$input.checked = this.getValue();
 		return this;

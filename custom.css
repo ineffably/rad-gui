@@ -1,0 +1,168 @@
+:root {
+  --light-color-background: #f8f9fa;
+  --light-color-background-secondary: #fff;
+  --light-color-warning-text: #222;
+  --light-color-background-warning: #fff3cd;
+  --light-color-icon-background: #fff;
+  --light-color-accent: #4b72c4;
+  --light-color-text: #212529;
+  --light-color-text-aside: #6c757d;
+  --light-color-link: #007bff;
+  --light-color-ts: #db2777;
+  --light-color-ts-interface: #2563eb;
+  --light-color-ts-enum: #fb7185;
+  --light-color-ts-class: #0d9488;
+  --light-color-ts-function: #7c3aed;
+  --light-color-ts-namespace: #ca8a04;
+  --light-color-ts-private: #4b5563;
+  --light-color-ts-variable: #b45309;
+
+  --dark-color-background: #1e1e1e;
+  --dark-color-background-secondary: #252525;
+  --dark-color-warning-text: #fff;
+  --dark-color-background-warning: #664d03;
+  --dark-color-icon-background: #333;
+  --dark-color-accent: #6ea8fe;
+  --dark-color-text: #e9ecef;
+  --dark-color-text-aside: #adb5bd;
+  --dark-color-link: #3d9df3;
+  --dark-color-ts: #f472b6;
+  --dark-color-ts-interface: #93c5fd;
+  --dark-color-ts-enum: #fda4af;
+  --dark-color-ts-class: #5eead4;
+  --dark-color-ts-function: #c4b5fd;
+  --dark-color-ts-namespace: #fcd34d;
+  --dark-color-ts-private: #9ca3af;
+  --dark-color-ts-variable: #fbbf24;
+}
+
+/* Improved headers */
+.tsd-page-title h1 {
+  font-size: 3rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 1.5rem !important;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.tsd-page-title h1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100px;
+  height: 4px;
+  background-color: var(--light-color-accent);
+}
+
+/* Card-like appearance for modules and classes */
+.tsd-panel {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  transition: box-shadow 0.3s ease-in-out !important;
+}
+
+.tsd-panel:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Better code blocks */
+pre {
+  border-radius: 6px !important;
+  padding: 16px !important;
+}
+
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+  font-size: 0.9em !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+}
+
+/* Improved method signature styling */
+.tsd-signature {
+  padding: 12px 16px !important;
+  border-radius: 6px !important;
+  background-color: var(--light-color-background-secondary) !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Enhanced navigation */
+.tsd-navigation.primary .tsd-accordion-summary {
+  font-weight: 600 !important;
+}
+
+.tsd-navigation a {
+  transition: all 0.2s ease !important;
+}
+
+.tsd-navigation a:hover {
+  text-decoration: none !important;
+  transform: translateX(2px) !important;
+}
+
+/* Badge styling */
+.tsd-kind-icon, .tsd-flag {
+  border-radius: 4px !important;
+  padding: 0.2em 0.6em !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+/* Improved table styling */
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+th {
+  background-color: var(--light-color-background-secondary) !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+  font-weight: 600 !important;
+}
+
+td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+/* Improved search UX */
+#tsd-search-field input {
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+}
+
+/* Better toggle buttons */
+.tsd-checkbox-background {
+  stroke-width: 1px !important;
+}
+
+.tsd-filter-item {
+  margin-right: 8px !important;
+}
+
+/* Enhanced readability for parameters and returns */
+.tsd-parameters h4, .tsd-returns h4 {
+  font-weight: 600 !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .tsd-page-title h1 {
+    font-size: 2rem !important;
+  }
+  
+  .tsd-panel {
+    padding: 16px !important;
+  }
+}
+
+/* Dark mode refinements */
+.tsd-theme-dark .tsd-signature {
+  background-color: var(--dark-color-background-secondary) !important;
+} 

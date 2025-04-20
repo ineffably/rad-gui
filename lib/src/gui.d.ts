@@ -31,7 +31,7 @@ export declare class GUI {
     _onChangeCallback: any;
     _onOpenCloseCallback: any;
     constructor({ parent, autoPlace, container, width, title, closeFolders, injectStyles, touchStyles }?: any);
-    add(object: any, property: any, $1: any, max: any, step: any): ToggleControl | FunctionControl | NumberControl | OptionControl | TextControl;
+    add(object: any, property: any, $1: any, max: any, step: any): OptionControl | NumberControl | ToggleControl | TextControl | FunctionControl;
     addColor(object: any, property: any, rgbScale?: number): ColorControl;
     addFolder(title: any): GUI;
     load(obj: any, recursive?: boolean): this;

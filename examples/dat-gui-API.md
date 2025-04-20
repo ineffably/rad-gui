@@ -1,5 +1,7 @@
 # dat.GUI API
 
+> This was my cheat sheet for the spec for dat.gui 
+
 Details about the classes, methods, and properties provided by dat.GUI. For more
 hands-on examples, see the dat.GUI [tutorial](http://workshop.chromeexperiments.com/examples/gui).
 

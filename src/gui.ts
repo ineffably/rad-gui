@@ -14,32 +14,69 @@ const _injectStyles = (styles) => {
   console.log('injecting styles', styles);
 }
 
+/**
+ * GUI is the main container class for creating control panels
+ * It manages a collection of controllers and can contain nested folders (child GUIs)
+ */
 export class GUI {
+  /** Parent GUI instance if this is a folder */
   parent: GUI;
+  /** Whether to automatically place the GUI in the document body */
   autoPlace: boolean;
+  /** Width of the GUI in pixels */
   width: any;
+  /** Whether folders should be closed by default */
   closeFolders: boolean;
+  /** Whether to inject CSS styles */
   injectStyles: boolean;
+  /** Whether to include touch-friendly styles */
   touchStyles: boolean;
+  /** The root GUI instance (this instance or the topmost parent) */
   root: any;
+  /** Array of child elements (controllers and folders) */
   children: any[];
+  /** Array of controllers in this GUI */
   controllers: any[];
+  /** Array of folders (child GUIs) in this GUI */
   folders: any[];
+  /** The main DOM element for this GUI */
   domElement: HTMLDivElement;
+  /** The title button element */
   $title: HTMLButtonElement;
+  /** The container for child elements */
   $children: HTMLDivElement;
+  /** The container element if provided */
   container: HTMLDivElement
+  /** Whether the GUI is closed (folded) */
   _closed: boolean;
+  /** Whether the GUI is hidden */
   _hidden: boolean;
+  /** Callback for value changes */
   _onChange: any;
+  /** Callback for when value changes are completed */
   _onFinishChange: any;
+  /** Callback for open/close events */
   _onOpenClose: any;
+  /** The title of the GUI */
   _title: string;
+  /** Whether child folders should be closed by default */
   _closeFolders: boolean;
   _onFinishChangeCallback: any;
   _onChangeCallback: any;
   _onOpenCloseCallback: any;
 
+  /**
+   * Creates a new GUI instance
+   * @param options - Configuration options
+   * @param options.parent - Parent GUI instance (if this is a folder)
+   * @param options.autoPlace - Whether to automatically append to document.body
+   * @param options.container - Custom container element
+   * @param options.width - Width in pixels
+   * @param options.title - Title of the GUI
+   * @param options.closeFolders - Whether folders should be closed by default
+   * @param options.injectStyles - Whether to inject CSS styles
+   * @param options.touchStyles - Whether to include touch-friendly styles
+   */
   constructor({
     parent,
     autoPlace = parent === undefined,
@@ -102,6 +139,15 @@ export class GUI {
     this._closeFolders = closeFolders;
   }
 
+  /**
+   * Adds a controller to the GUI
+   * @param object - Object containing the property to control
+   * @param property - Name of the property to control
+   * @param $1 - Min value or options object
+   * @param max - Max value
+   * @param step - Step size
+   * @returns The created controller
+   */
   add(object, property, $1, max, step) {
     if (Object($1) === $1) {
       return new OptionControl(this, object, property, $1);
@@ -124,10 +170,22 @@ export class GUI {
 
   }
 
+  /**
+   * Adds a color controller to the GUI
+   * @param object - Object containing the property to control
+   * @param property - Name of the property to control
+   * @param rgbScale - Scale for RGB values (default 1)
+   * @returns The created color controller
+   */
   addColor(object, property, rgbScale = 1) {
     return new ColorControl(this, object, property, rgbScale);
   }
 
+  /**
+   * Adds a folder (nested GUI) to the GUI
+   * @param title - Title of the folder
+   * @returns The created folder (GUI instance)
+   */
   addFolder(title) {
     const folder = new GUI({ parent: this, title });
     this.folders.push(folder);
@@ -135,6 +193,12 @@ export class GUI {
     return folder;
   }
 
+  /**
+   * Loads saved controller values
+   * @param obj - Object containing saved state
+   * @param recursive - Whether to load state for nested folders
+   * @returns This GUI instance (for chaining)
+   */
   load(obj, recursive = true) {
     if (obj.controllers) {
       this.controllers.forEach(c => {
@@ -155,10 +219,18 @@ export class GUI {
     return this;
   }
 
+  /**
+   * Alias for save(true)
+   */
   remember(...args) {
     this.save(true);
   }
 
+  /**
+   * Saves the current state of all controllers
+   * @param recursive - Whether to save state for nested folders
+   * @returns Object containing the saved state
+   */
   save(recursive = true) {
     const obj = {
       controllers: {},
@@ -188,6 +260,11 @@ export class GUI {
     return obj;
   }
 
+  /**
+   * Opens or closes the GUI
+   * @param open - Whether to open the GUI
+   * @returns This GUI instance (for chaining)
+   */
   open(open = true) {
     this._setClosed(!open);
     this.$title.setAttribute('aria-expanded', (!this._closed) + '');
@@ -195,26 +272,49 @@ export class GUI {
     return this;
   }
 
+  /**
+   * Closes the GUI (alias for open(false))
+   * @returns This GUI instance (for chaining)
+   */
   close() {
     return this.open(false);
   }
 
+  /**
+   * Sets the closed state and triggers callbacks
+   * @param closed - Whether the GUI should be closed
+   * @private
+   */
   _setClosed(closed) {
     if (this._closed === closed) return;
     this._closed = closed;
     this._callOnOpenClose(this);
   }
 
+  /**
+   * Shows or hides the GUI
+   * @param show - Whether to show the GUI
+   * @returns This GUI instance (for chaining)
+   */
   show(show = true) {
     this._hidden = !show;
     this.domElement.style.display = this._hidden ? 'none' : '';
     return this;
   }
 
+  /**
+   * Hides the GUI (alias for show(false))
+   * @returns This GUI instance (for chaining)
+   */
   hide() {
     return this.show(false);
   }
 
+  /**
+   * Opens or closes the GUI with a smooth animation
+   * @param open - Whether to open the GUI
+   * @returns This GUI instance (for chaining)
+   */
   openAnimated(open = true) {
     // set state immediately
     this._setClosed(!open);
@@ -252,23 +352,43 @@ export class GUI {
 
   }
 
+  /**
+   * Sets the title of the GUI
+   * @param title - The new title
+   * @returns This GUI instance (for chaining)
+   */
   title(title) {
     this._title = title;
     this.$title.textContent = title;
     return this;
   }
 
+  /**
+   * Resets all controllers to their initial values
+   * @param recursive - Whether to reset controllers in nested folders
+   * @returns This GUI instance (for chaining)
+   */
   reset(recursive = true) {
     const controllers = recursive ? this.controllersRecursive() : this.controllers;
     controllers.forEach(c => c.reset());
     return this;
   }
 
+  /**
+   * Registers a callback for value changes
+   * @param callback - Function called when any controller's value changes
+   * @returns This GUI instance (for chaining)
+   */
   onChange(callback) {
     this._onChange = callback;
     return this;
   }
 
+  /**
+   * Called when a controller's value changes
+   * @param controller - The controller that triggered the change
+   * @private
+   */
   _callOnChange(controller) {
 
     if (this.parent) {
@@ -285,11 +405,21 @@ export class GUI {
     }
   }
 
+  /**
+   * Registers a callback for when value changes are completed
+   * @param callback - Function called when any controller finishes changing
+   * @returns This GUI instance (for chaining)
+   */
   onFinishChange(callback) {
     this._onFinishChange = callback;
     return this;
   }
 
+  /**
+   * Called when a controller finishes changing its value
+   * @param controller - The controller that triggered the change
+   * @private
+   */
   _callOnFinishChange(controller) {
 
     if (this.parent) {
@@ -306,11 +436,21 @@ export class GUI {
     }
   }
 
+  /**
+   * Registers a callback for open/close events
+   * @param callback - Function called when any GUI or folder is opened or closed
+   * @returns This GUI instance (for chaining)
+   */
   onOpenClose(callback) {
     this._onOpenClose = callback;
     return this;
   }
 
+  /**
+   * Called when a GUI or folder is opened or closed
+   * @param changedGUI - The GUI that was opened or closed
+   * @private
+   */
   _callOnOpenClose(changedGUI) {
     if (this.parent) {
       this.parent._callOnOpenClose(changedGUI);
@@ -321,6 +461,9 @@ export class GUI {
     }
   }
 
+  /**
+   * Removes the GUI from the DOM and parent
+   */
   destroy() {
     if (this.parent) {
       this.parent.children.splice(this.parent.children.indexOf(this), 1);
@@ -332,6 +475,10 @@ export class GUI {
     Array.from(this.children).forEach(c => c.destroy());
   }
 
+  /**
+   * Gets all controllers from this GUI and its nested folders
+   * @returns Array of all controllers
+   */
   controllersRecursive() {
     let controllers = [...this.controllers];
     
@@ -342,6 +489,10 @@ export class GUI {
     return controllers;
   }
 
+  /**
+   * Gets all folders from this GUI and its nested folders
+   * @returns Array of all folders
+   */
   foldersRecursive() {
     let folders = [...this.folders];
     

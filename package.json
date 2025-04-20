@@ -2,6 +2,14 @@
   "name": "rad-gui",
   "version": "0.1.0",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "rimraf ./lib && webpack --mode=production",
     "build:clean": "rimraf ./lib && webpack --mode=development",
@@ -10,6 +18,7 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "docs": "typedoc --entryPoints readme.md usage.md src/**/*.ts --entryPointStrategy expand",
     "local": "webpack-dev-server --mode=development --open",
     "local:example": "webpack-dev-server --mode=development --env template=examples/index.example.html",
     "local:kitchen-sink": "webpack-dev-server --mode=development --env template=examples/kitchen-sink/index.html",

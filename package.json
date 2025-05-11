@@ -1,6 +1,6 @@
 {
   "name": "rad-gui",
-  "version": "0.7.0",
+  "version": "0.8.0-beta.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "exports": {
@@ -28,7 +28,17 @@
     "local:kitchen-sink": "webpack-dev-server --mode=development --open examples/kitchen-sink/index.html",
     "local:compat": "webpack-dev-server --mode=development --env template=examples/dat-gui-compat.html"
   },
-  "keywords": ["gui", "rad-gui", "lil-gui", "dat-gui", "gui-library", "gui-component", "panels", "panels-html", "data-display" ],
+  "keywords": [
+    "gui",
+    "rad-gui",
+    "lil-gui",
+    "dat-gui",
+    "gui-library",
+    "gui-component",
+    "panels",
+    "panels-html",
+    "data-display"
+  ],
   "author": "Chad Neff <ccneff@gmail.com> (https://github.com/ineffably)",
   "license": "MIT",
   "type": "commonjs",

@@ -1,0 +1,157 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type (none, patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - none
+          - patch
+          - minor
+          - major
+      prerelease_id:
+        description: 'Pre-release identifier (e.g., beta, alpha). Leave empty for regular releases'
+        required: false
+        type: string
+      npm_tag:
+        description: 'npm tag (latest, next, beta, etc)'
+        required: true
+        default: 'latest'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        registry-url: 'https://registry.npmjs.org/'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Configure Git (for version bump)
+      if: inputs.release_type != 'none'
+      run: |
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+    
+    - name: Version bump (if selected)
+      if: inputs.release_type != 'none'
+      id: version
+      run: |
+        # Determine version command based on inputs
+        if [ -n "${{ inputs.prerelease_id }}" ]; then
+          VERSION_ARG="pre${{ inputs.release_type }} --preid=${{ inputs.prerelease_id }}"
+        else
+          VERSION_ARG="${{ inputs.release_type }}"
+        fi
+        
+        # Run npm version
+        npm version $VERSION_ARG -m "Release %s"
+        
+        # Extract new version number
+        NEW_VERSION=$(node -e "console.log(require('./package.json').version)")
+        echo "New version: $NEW_VERSION"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+    
+    - name: Update CHANGELOG.md
+      if: inputs.release_type != 'none'
+      run: |
+        # Get the date for the entry
+        TODAY=$(date +"%Y-%m-%d")
+        
+        # Check if this version already has an entry
+        if ! grep -q "## \[${{ env.NEW_VERSION }}\]" CHANGELOG.md; then
+          # Get the previous tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "Generating changelog from $PREVIOUS_TAG to v${{ env.NEW_VERSION }}"
+            
+            # Prepare changelog entry
+            CHANGELOG_ENTRY="## [${{ env.NEW_VERSION }}] - $TODAY\n\n"
+            
+            # Get conventional commits and group them
+            FEATURES=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"%s" | grep -E "^feat(\([^)]+\))?:" | sed 's/^feat\([^)]*\): /- /' || echo "")
+            FIXES=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"%s" | grep -E "^fix(\([^)]+\))?:" | sed 's/^fix\([^)]*\): /- /' || echo "")
+            CHANGES=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"%s" | grep -E "^change(\([^)]+\))?:|^refactor(\([^)]+\))?:" | sed 's/^change\([^)]*\): /- /' | sed 's/^refactor\([^)]*\): /- /' || echo "")
+            
+            # Add sections with content to the changelog entry
+            if [ -n "$FEATURES" ]; then
+              CHANGELOG_ENTRY="${CHANGELOG_ENTRY}### Added\n${FEATURES}\n\n"
+            fi
+            
+            if [ -n "$FIXES" ]; then
+              CHANGELOG_ENTRY="${CHANGELOG_ENTRY}### Fixed\n${FIXES}\n\n"
+            fi
+            
+            if [ -n "$CHANGES" ]; then
+              CHANGELOG_ENTRY="${CHANGELOG_ENTRY}### Changed\n${CHANGES}\n\n"
+            fi
+            
+            # Add comparison link
+            PREVIOUS_VERSION=${PREVIOUS_TAG#v}
+            LINK_ENTRY="[${{ env.NEW_VERSION }}]: https://github.com/ineffably/rad-gui/compare/v$PREVIOUS_VERSION...v${{ env.NEW_VERSION }}\n"
+            
+            # Insert at the top of the file, after the header
+            sed -i "5s/^/\n$CHANGELOG_ENTRY$LINK_ENTRY/" CHANGELOG.md
+            
+            # Commit the updated changelog
+            git add CHANGELOG.md
+            git commit -m "Update CHANGELOG.md for v${{ env.NEW_VERSION }} [skip ci]"
+          fi
+        fi
+    
+    - name: Push changes
+      if: inputs.release_type != 'none'
+      run: git push --follow-tags
+    
+    - name: Build package
+      run: npm run build
+    
+    - name: Check package contents
+      run: |
+        npm pack --dry-run
+        echo "Verifying package contents..."
+        npm pack
+        PACKAGE_FILE=$(ls rad-gui-*.tgz)
+        tar -tf $PACKAGE_FILE | sort
+    
+    - name: Publish to npm
+      run: npm publish --tag ${{ inputs.npm_tag }}
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        
+    - name: Create GitHub Release
+      if: inputs.release_type != 'none'
+      run: |
+        VERSION="${{ env.NEW_VERSION }}"
+        
+        # Read the latest release notes from CHANGELOG.md
+        CHANGELOG_SECTION=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d')
+        
+        # Create a GitHub release with the changelog
+        gh release create v$VERSION \
+          --title "Release v$VERSION" \
+          --notes "$CHANGELOG_SECTION" \
+          rad-gui-*.tgz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

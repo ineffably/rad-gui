@@ -15,8 +15,10 @@
   <sub>Create beautiful control panels with minimal code</sub>
 </p>
 
-<div  align="center">
+<div align="center">
   <a href="https://ineffably.github.io/rad-gui/">See an interactive example here!</a>
+  <span>&nbsp;|&nbsp;</span>
+  <a href="CHANGELOG.md">View Changelog</a>
 </div>
 
 ## ✨ Features

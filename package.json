@@ -32,7 +32,15 @@
   "author": "Chad Neff <ccneff@gmail.com> (https://github.com/ineffably)",
   "license": "MIT",
   "type": "commonjs",
-  "description": "",
+  "description": "A simple, feature-rich, and easy-to-use GUI library for better visibility into data intensive applications.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ineffably/rad-gui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ineffably/rad-gui/issues"
+  },
+  "homepage": "https://github.com/ineffably/rad-gui#readme",
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

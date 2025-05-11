@@ -13,14 +13,14 @@ describe('el function', () => {
   });
 
   test('adds classes to the element', () => {
-    const div = el('div', {}, ['class1', 'class2']);
+    const div = el('div', { classList: ['class1', 'class2'] });
     expect(div.classList.contains('class1')).toBe(true);
     expect(div.classList.contains('class2')).toBe(true);
   });
 
   test('adds event listeners to the element', () => {
     const clickHandler = jest.fn();
-    const div = el('div', {}, [], { click: [clickHandler] });
+    const div = el('div', {}, { click: [clickHandler] });
     
     div.click();
     expect(clickHandler).toHaveBeenCalledTimes(1);
@@ -29,7 +29,7 @@ describe('el function', () => {
   test('appends children to the element', () => {
     const child1 = el('span');
     const child2 = el('p');
-    const div = el('div', {}, [], {}, [child1, child2]);
+    const div = el('div', { children: [child1, child2] });
     
     expect(div.children.length).toBe(2);
     expect(div.children[0]).toBe(child1);
@@ -42,10 +42,13 @@ describe('el function', () => {
     
     const div = el(
       'div',
-      { id: 'test-div', title: 'Test Div' },
-      ['test-class'],
-      { click: [clickHandler] },
-      [child]
+      { 
+        id: 'test-div', 
+        title: 'Test Div',
+        classList: ['test-class'],
+        children: [child]
+      },
+      { click: [clickHandler] }
     );
     
     expect(div.tagName).toBe('DIV');

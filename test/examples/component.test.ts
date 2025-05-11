@@ -12,18 +12,32 @@ function createCounter() {
     countDisplay.textContent = count.toString();
   };
   
-  const countDisplay = el('span', { textContent: count.toString() }, ['count-display']);
-  const incrementButton = el('button', { textContent: '+' }, ['increment']);
-  const decrementButton = el('button', { textContent: '-' }, ['decrement']);
+  const countDisplay = el('span', { 
+    textContent: count.toString(),
+    classList: ['count-display']
+  });
+  
+  const incrementButton = el('button', { 
+    textContent: '+',
+    classList: ['increment']
+  });
+  
+  const decrementButton = el('button', { 
+    textContent: '-',
+    classList: ['decrement']
+  });
   
   incrementButton.addEventListener('click', () => updateCount(count + 1));
   decrementButton.addEventListener('click', () => updateCount(count - 1));
   
-  const container = el('div', {}, ['counter-container'], {}, [
-    decrementButton,
-    countDisplay,
-    incrementButton
-  ]);
+  const container = el('div', {
+    classList: ['counter-container'],
+    children: [
+      decrementButton,
+      countDisplay,
+      incrementButton
+    ]
+  });
   
   return container;
 }

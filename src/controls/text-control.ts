@@ -23,15 +23,14 @@ export default class TextControl extends BaseControl {
       type: 'text',
       spellcheck: 'false',
       'aria-labelledby': this.$name.id
-    }, [], {
+    }, {
       input: [() => { this.setValue(this.$input.value) }],
       blur: [() => { this._callOnFinishChange() }],
       keydown: [(e: KeyboardEvent) => {
         if (e.code === 'Enter') {
           this.$input.blur();
         }
-      },
-      ]
+      }]
     });
 
     this.$widget.appendChild(this.$input);

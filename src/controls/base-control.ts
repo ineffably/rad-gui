@@ -61,19 +61,26 @@ export default class BaseControl {
 		this.property = property;
 		this.initialValue = this.getValue();
 
-    this.$name = el('div', {}, ['name']);
-    this.$widget = el('div', {}, ['widget']);
+    this.$name = el('div', {
+      classList: ['name']
+    });
+    
+    this.$widget = el('div', {
+      classList: ['widget']
+    });
+    
     this.$elForDisable = this.$widget;
 
     this.domElement = el(
       elementType, 
-      {}, 
-      ['controller', className],
+      {
+        classList: ['controller', className],
+        children: [this.$name, this.$widget]
+      }, 
       {
         'keydown': [e => e.stopPropagation()],
         'keyup': [e => e.stopPropagation()],
-      },
-      [this.$name, this.$widget]
+      }
     );
 
 		this.parent.children.push( this );

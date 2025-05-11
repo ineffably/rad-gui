@@ -19,12 +19,15 @@ export default class ToggleControl extends BaseControl {
 	constructor( parent, object, property ) {
 		super( parent, object, property, 'boolean', 'label' );
     
-		this.$input = el('input', {type: 'checkbox', 'aria-labelledby': this.$name.id},[], {
+		this.$input = el('input', {
+      type: 'checkbox', 
+      'aria-labelledby': this.$name.id
+    }, {
       change: [ () => {
         this.setValue( this.$input.checked );
         this._callOnFinishChange();
       } ]
-    } )
+    });
 
 		this.$widget.appendChild( this.$input );
 		this.$elForDisable = this.$input;

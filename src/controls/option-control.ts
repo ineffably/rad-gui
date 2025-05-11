@@ -29,7 +29,7 @@ export default class OptionControl extends BaseControl {
 
     this.$select = el('select', {
       'aria-labelledby': this.$name.id
-    }, [], {
+    }, {
       change: [() => {
         this.setValue(this._values[this.$select.selectedIndex]);
         this._callOnFinishChange();
@@ -42,7 +42,9 @@ export default class OptionControl extends BaseControl {
       }]
     });
 
-    this.$display = el('div', {}, ['display']);
+    this.$display = el('div', {
+      classList: ['display']
+    });
 
     this.$widget.appendChild(this.$select);
     this.$widget.appendChild(this.$display);

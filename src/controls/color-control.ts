@@ -23,7 +23,7 @@ export default class ColorControl extends BaseControl {
       type: 'color',
       tabindex: '-1',
       'aria-labelledby': this.$name.id
-    }, [], {
+    }, {
       blur: [() => { this._callOnFinishChange() }],
       input: [() => { this._setValueFromHexString(this.$input.value) }]
     });
@@ -33,7 +33,7 @@ export default class ColorControl extends BaseControl {
       spellcheck: 'false',
       tabindex: '-1',
       'aria-labelledby': this.$name.id
-    }, [],
+    },
       {
         blur: [() => {
           this._textFocused = false;
@@ -53,7 +53,10 @@ export default class ColorControl extends BaseControl {
       }
     );
 
-    this.$display = el('div', {}, ['display'], {}, [this.$input]);
+    this.$display = el('div', {
+      classList: ['display'],
+      children: [this.$input]
+    });
 
     this.$widget.appendChild(this.$display);
     this.$widget.appendChild(this.$text);

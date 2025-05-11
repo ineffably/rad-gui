@@ -19,14 +19,16 @@ export default class FunctionControl extends BaseControl {
 	constructor( parent, object, property ) {
 		super( parent, object, property, 'function' );
 
-		this.$button = el( 'button', {}, [], {
+		this.$button = el( 'button', {
+      children: [this.$name]
+    }, {
       click: [e => {
         e.preventDefault();
         this.getValue().call( this.object );
         this._callOnChange();
       }],
       touchstart: [() => {}, { passive: true }]
-    }, [this.$name]);
+    });
 
     this.$widget.appendChild( this.$button );
 

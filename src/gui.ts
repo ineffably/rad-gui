@@ -103,15 +103,23 @@ export class GUI {
       parent.folders.push(this);
     }
 
-    this.$title = el('button', { 'aria-expanded': 'true' }, ['title'], {
+    this.$title = el('button', { 
+      'aria-expanded': 'true',
+      classList: ['title']
+    }, {
       click: [() => this.openAnimated(this._closed)],
       touchstart: [() => { }, { passive: true }]
     });
 
-    this.$children = el('div', {}, ['children']);
-    this.$children.classList.add('children');
+    this.$children = el('div', { 
+      classList: ['children'] 
+    });
 
-    this.domElement = el('div', {}, ['rad-gui', 'root'], {}, [this.$title, this.$children]);
+    this.domElement = el('div', { 
+      classList: ['rad-gui', 'root'],
+      children: [this.$title, this.$children]
+    });
+    
     if (touchStyles) {
       this.domElement.classList.add('allow-touch-styles');
     }

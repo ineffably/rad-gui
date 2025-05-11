@@ -180,7 +180,7 @@ export default class NumberControl extends BaseControl {
 			type: isTouch ? 'number' : 'text',
 			'aria-labelledby': this.$name.id,
 			...(isTouch ? { step: 'any' } : {})
-		}, [], {
+		}, {
 			input: [this._handleInput.bind(this)],
 			keydown: [this._handleKeyDown.bind(this)],
 			wheel: [this._handleInputWheel.bind(this)],
@@ -199,14 +199,19 @@ export default class NumberControl extends BaseControl {
 	_initSlider() {
 		this._hasSlider = true;
 
-		this.$fill = el('div', {}, ['fill']);
+		this.$fill = el('div', {
+			classList: ['fill']
+		});
 		this.domElement.classList.add('hasSlider');
 
-    this.$slider = el('div', {}, ['slider'], {
+    this.$slider = el('div', {
+			classList: ['slider'],
+			children: [this.$fill]
+		}, {
       'mousedown': [this._handleSliderMouseDown.bind(this)],
       'touchstart': [this._handleSliderTouchStart.bind(this), { passive: false }],
       'wheel': [this._handleSliderWheel.bind(this), { passive: false }]
-    }, [this.$fill]); 
+    }); 
 
 		this.$widget.insertBefore(this.$slider, this.$input);
   }

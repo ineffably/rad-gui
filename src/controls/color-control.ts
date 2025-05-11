@@ -1,8 +1,8 @@
 import BaseControl from './base-control';
-import { el } from '../utils/el';
+import { el } from '../library/el';
 
-import getColorFormat from '../utils/color-formats';
-import normalizeColorString from '../utils/normalize-color-string';
+import getColorFormat from '../library/color-formats';
+import normalizeColorString from '../library/normalize-color-string';
 
 /**
  * @displayName ColorControl

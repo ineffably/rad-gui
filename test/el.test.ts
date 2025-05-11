@@ -1,4 +1,4 @@
-import { el } from '../src/utils/el';
+import { el } from '../src/library/el';
 
 describe('el function', () => {
   test('creates an HTML element with the specified tag name', () => {

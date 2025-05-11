@@ -8,7 +8,7 @@ type EventHandler = [
   options?: AddEventListenerOptions
 ];
 
-const specialProps = ['classList', 'children', 'eventHandlers'];
+const _specialProps = ['classList', 'children', 'eventHandlers'];
 
 /**
  * Creates an HTML element with the specified tag name, properties, event handlers.
@@ -84,11 +84,11 @@ export const el = <T extends keyof HTMLElementTagNameMap>(
 
   // Handle regular properties
   Object.entries(props)
-    .filter(([key]) => !specialProps.includes(key))
+    .filter(([key]) => !_specialProps.includes(key))
     .forEach(([key, value]) => element[key] = value as any);
 
   // Add classes if provided
-  if (Array.isArray(props.classList)) {
+  if (Array.isArray(props?.classList)) {
     props.classList.filter(Boolean).forEach(cls => element.classList.add(cls));
   }
   
@@ -98,7 +98,7 @@ export const el = <T extends keyof HTMLElementTagNameMap>(
   );
 
   // Append children if provided
-  if (Array.isArray(props.children)) {
+  if (Array.isArray(props?.children)) {
     props.children.forEach(child => element.appendChild(child));
   }
 

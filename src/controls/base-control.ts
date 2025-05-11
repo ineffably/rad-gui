@@ -1,4 +1,4 @@
-import { el } from '../utils/el';
+import { el } from '../library/el';
 
 /**
  * BaseControl is the foundation class for all controllers

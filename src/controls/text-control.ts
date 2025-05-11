@@ -1,4 +1,4 @@
-import { el } from '../utils/el';
+import { el } from '../library/el';
 import BaseControl from './base-control';
 
 /**

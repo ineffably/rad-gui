@@ -1,5 +1,5 @@
-import { el } from '../../src/utils/el';
-import { createTestContainer, removeTestContainer, fireClick } from '../utils/dom';
+import { el } from '../../src/library/el';
+import { createTestContainer, removeTestContainer, fireClick } from '../library/dom';
 
 /**
  * Example component: A simple counter

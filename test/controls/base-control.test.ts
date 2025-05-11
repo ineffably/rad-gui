@@ -1,5 +1,4 @@
 import BaseControl from '../../src/controls/base-control';
-import { el } from '../../src/utils/el';
 
 // Mock requestAnimationFrame and cancelAnimationFrame
 global.requestAnimationFrame = jest.fn(callback => setTimeout(callback, 0));

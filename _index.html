@@ -14,7 +14,7 @@
       --primary-light: #6ea8fe;
       --background-color: #f8f9fa;
       --card-bg: #ffffff;
-      --text-color: #212529;
+      --text-color: #2d2d2d;
       --text-light: #6c757d;
       --border-color: #e9ecef;
       --code-bg: #f3f4f6;
@@ -45,8 +45,8 @@
     
     header {
       text-align: center;
-      padding: 60px 20px;
-      background: var(--primary-color);
+      padding: 30px 20px;
+      background: #2d2d2d;
       color: white;
       margin-bottom: 40px;
       position: relative;
@@ -70,15 +70,15 @@
     }
     
     header h1 {
-      font-size: 48px;
+      font-size: 24px;
       margin: 0;
       font-weight: 700;
       letter-spacing: -0.5px;
     }
     
     .tagline {
-      font-size: 20px;
-      margin: 15px 0 0;
+      font-size: 16px;
+      margin: 10px 0 0;
       font-weight: 300;
       max-width: 600px;
       margin-left: auto;
@@ -98,7 +98,7 @@
       font-weight: 600;
       margin-top: 0;
       margin-bottom: 20px;
-      color: var(--primary-color);
+      color: #2d2d2d;
       position: relative;
       padding-bottom: 10px;
     }
@@ -185,7 +185,7 @@
     .feature h3 {
       margin-top: 0;
       font-size: 18px;
-      color: var(--primary-color);
+      color: #2d2d2d;
       margin-bottom: 10px;
     }
     
@@ -209,7 +209,7 @@
       font-size: 18px;
       margin-top: 0;
       margin-bottom: 15px;
-      color: var(--primary-color);
+      color: #2d2d2d;
     }
     
     footer {
@@ -223,15 +223,15 @@
     
     @media (max-width: 768px) {
       header {
-        padding: 40px 20px;
+        padding: 20px 10px;
       }
       
       header h1 {
-        font-size: 36px;
+        font-size: 20px;
       }
       
       .tagline {
-        font-size: 18px;
+        font-size: 14px;
       }
       
       .demo-container {
@@ -302,37 +302,7 @@ gui.addColor(params, 'color');</code></pre>
         </div>
       </div>
     </section>
-    
-    <section>
-      <h2>Features</h2>
-      <div class="feature-grid">
-        <div class="feature">
-          <h3>Lightweight</h3>
-          <p>Small footprint with no external dependencies</p>
-        </div>
-        <div class="feature">
-          <h3>Flexible UI Controls</h3>
-          <p>Numbers, sliders, colors, dropdowns, buttons, and more</p>
-        </div>
-        <div class="feature">
-          <h3>Customizable Themes</h3>
-          <p>Easy styling with CSS variables to match your application</p>
-        </div>
-        <div class="feature">
-          <h3>Event Handling</h3>
-          <p>React to user interactions with onChange events</p>
-        </div>
-        <div class="feature">
-          <h3>Folders & Organization</h3>
-          <p>Group related controls using nested folders</p>
-        </div>
-        <div class="feature">
-          <h3>Save & Load State</h3>
-          <p>Persist GUI state between sessions</p>
-        </div>
-      </div>
-    </section>
-    
+
     <section>
       <h2>Code Example</h2>
       <pre><code>// Create a GUI with custom configuration
@@ -397,7 +367,7 @@ colors.open();</code></pre>
   
   <footer>
     <div class="container">
-      <p>RAD-GUI — Open source under the ISC license</p>
+      <p>RAD-GUI — Open source under the MIT license</p>
     </div>
   </footer>
   

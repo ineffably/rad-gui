@@ -1,5 +1,5 @@
-import getColorFormat from '../../src/utils/color-formats';
-import normalizeColorString from '../../src/utils/normalize-color-string';
+import getColorFormat from '../../src/library/color-formats';
+import normalizeColorString from '../../src/library/normalize-color-string';
 
 // Add type safety for the color formats
 interface ColorFormat {
@@ -10,7 +10,7 @@ interface ColorFormat {
 }
 
 // Mock the normalize-color-string module if needed
-jest.mock('../../src/utils/normalize-color-string', () => {
+jest.mock('../../src/library/normalize-color-string', () => {
   return jest.fn(str => {
     // Simple implementation for testing
     if (!str.startsWith('#')) {

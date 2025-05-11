@@ -1,5 +1,5 @@
 import BaseControl from './base-control';
-import { el } from '../utils/el';
+import { el } from '../library/el';
 
 /**
  * Controller for function values with a button interface

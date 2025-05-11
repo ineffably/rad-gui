@@ -4,7 +4,7 @@ import FunctionControl from './controls/function-control';
 import NumberControl from './controls/number-control';
 import OptionControl from './controls/option-control';
 import TextControl from './controls/text-control';
-import { el } from './utils/el';
+import { el } from './library/el';
 
 import './rad-gui.css';
 

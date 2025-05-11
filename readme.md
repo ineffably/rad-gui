@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/TypeScript-Ready-blue" alt="TypeScript Ready">
-  <img src="https://img.shields.io/badge/License-ISC-green" alt="License">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
   <img src="https://img.shields.io/badge/Version-0.1.0-orange" alt="Version">
 </div>
 

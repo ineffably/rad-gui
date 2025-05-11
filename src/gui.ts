@@ -196,8 +196,16 @@ export class GUI {
    */
   addFolder(title) {
     const folder = new GUI({ parent: this, title });
+    
+    // Add the folder to the parent's folders array
     this.folders.push(folder);
+    
+    // Add the folder's DOM element to the parent's $children element
+    this.$children.appendChild(folder.domElement);
+    
+    // Close the folder if closeFolders is true
     if (this.root._closeFolders) folder.close();
+    
     return folder;
   }
 
@@ -491,7 +499,7 @@ export class GUI {
     let controllers = [...this.controllers];
     
     for (const folder of this.folders) {
-      controllers = controllers.concat(folder.controllers);
+      controllers = controllers.concat(folder.controllersRecursive());
     }
     
     return controllers;
@@ -499,16 +507,26 @@ export class GUI {
 
   /**
    * Gets all folders from this GUI and its nested folders
-   * @returns Array of all folders
+   * @returns Array of all folders without duplicates
    */
   foldersRecursive() {
-    let folders = [...this.folders];
+    // Helper function to collect all folders recursively without duplicates
+    const collectFolders = (gui, folderSet = new Set()) => {
+      // Add each folder to the Set
+      gui.folders.forEach(folder => {
+        folderSet.add(folder);
+        // Recursively collect subfolders
+        collectFolders(folder, folderSet);
+      });
+      
+      return folderSet;
+    };
     
-    for (const folder of this.folders) {
-      folders = folders.concat(folder.folders);
-    }
+    // Collect all folders in a Set (which ensures uniqueness)
+    const folderSet = collectFolders(this);
     
-    return folders;
+    // Convert Set to Array and return
+    return Array.from(folderSet);
   }
 
 }

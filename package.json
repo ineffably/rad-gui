@@ -19,7 +19,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "docs": "typedoc --entryPoints readme.md usage.md src/**/*.ts --entryPointStrategy expand",
-    "local": "webpack-dev-server --mode=development --open",
+    "local": "webpack-dev-server --mode=development",
     "local:example": "webpack-dev-server --mode=development --env template=examples/index.example.html",
     "local:kitchen-sink": "webpack-dev-server --mode=development --open examples/kitchen-sink/index.html",
     "local:compat": "webpack-dev-server --mode=development --env template=examples/dat-gui-compat.html"

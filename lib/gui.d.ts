@@ -56,6 +56,6 @@ export declare class GUI {
     _callOnOpenClose(changedGUI: any): void;
     destroy(): void;
     controllersRecursive(): any[];
-    foldersRecursive(): any[];
+    foldersRecursive(): unknown[];
 }
 export default GUI;

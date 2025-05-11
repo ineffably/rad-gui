@@ -3,13 +3,21 @@
 <div align="center">
   <img src="https://img.shields.io/badge/TypeScript-Ready-blue" alt="TypeScript Ready">
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
-  <img src="https://img.shields.io/badge/Version-0.1.0-orange" alt="Version">
+  <img src="https://img.shields.io/badge/Version-0.7.0-orange" alt="Version">
+  <a href="https://github.com/ineffably/rad-gui/actions/workflows/build.yml">
+    <img src="https://github.com/ineffably/rad-gui/actions/workflows/build.yml/badge.svg" alt="Build Status">
+  </a>
+  <img src="https://raw.githubusercontent.com/ineffably/rad-gui/main/badges/coverage.svg" alt="Test Coverage">
 </div>
 
 <p align="center">
   <b>Lightweight, flexible GUI controls for your JavaScript applications</b><br>
   <sub>Create beautiful control panels with minimal code</sub>
 </p>
+
+<div  align="center">
+  <a href="https://ineffably.github.io/rad-gui/">See an interactive example here!</a>
+</div>
 
 ## ✨ Features
 
@@ -63,6 +71,15 @@ gui.add(params, 'doSomething').name('Run Action');
 const folder = gui.addFolder('Advanced Settings');
 folder.add(params, 'x').step(5).name('X (Step 5)');
 ```
+
+## Previews
+
+<a href="https://ineffably.github.io/rad-gui/">
+  <img src="images/particle-demo.png" height="400" />
+</a>
+<a href="https://ineffably.github.io/rad-gui/examples/kitchen-sink/index.html">
+  <img src="images/preview.png" height="400" />
+</a>
 
 ## 📚 Documentation
 

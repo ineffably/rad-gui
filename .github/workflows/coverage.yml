@@ -1,0 +1,88 @@
+name: Test Coverage
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests with coverage
+      run: npm run test:coverage
+    
+    # Generate and extract coverage percentage
+    - name: Extract Coverage Percentage
+      id: extract_coverage
+      run: |
+        COVERAGE=$(node -e "const fs=require('fs'); const coverage = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json')); console.log(coverage.total.statements.pct)")
+        echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+        echo "Coverage: $COVERAGE%"
+        
+    # Output the coverage as a job summary
+    - name: Output Coverage Summary
+      run: |
+        echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+        echo "Total Statement Coverage: ${{ env.COVERAGE }}%" >> $GITHUB_STEP_SUMMARY
+    
+    # Create and commit the coverage badge directly to the default branch
+    - name: Generate Coverage Badge
+      if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      run: |
+        # Create badges directory if it doesn't exist
+        mkdir -p badges
+        
+        # Get coverage percentage from the coverage summary
+        COV="${{ env.COVERAGE }}"
+        
+        # Determine badge color based on coverage
+        if (( $(echo "$COV >= 90" | bc -l) )); then
+          COLOR="brightgreen"
+        elif (( $(echo "$COV >= 80" | bc -l) )); then
+          COLOR="green"
+        elif (( $(echo "$COV >= 70" | bc -l) )); then
+          COLOR="yellowgreen"
+        elif (( $(echo "$COV >= 60" | bc -l) )); then
+          COLOR="yellow"
+        else
+          COLOR="red"
+        fi
+        
+        # Generate SVG badge
+        BADGE_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"103.3\" height=\"20\" viewBox=\"0 0 1033 200\" role=\"img\" aria-label=\"coverage: ${COV}%\"><title>coverage: ${COV}%</title><linearGradient id=\"Geyyl\" x2=\"0\" y2=\"100%\"><stop offset=\"0\" stop-opacity=\".1\" stop-color=\"#EEE\"/><stop offset=\"1\" stop-opacity=\".1\"/></linearGradient><mask id=\"ONGBh\"><rect width=\"1033\" height=\"200\" rx=\"30\" fill=\"#FFF\"/></mask><g mask=\"url(#ONGBh)\"><rect width=\"603\" height=\"200\" fill=\"#555\"/><rect width=\"430\" height=\"200\" fill=\"${COLOR}\" x=\"603\"/><rect width=\"1033\" height=\"200\" fill=\"url(#Geyyl)\"/></g><g aria-hidden=\"true\" fill=\"#fff\" text-anchor=\"start\" font-family=\"Verdana,DejaVu Sans,sans-serif\" font-size=\"110\"><text x=\"60\" y=\"148\" textLength=\"503\" fill=\"#000\" opacity=\".25\">coverage</text>    <text x=\"50\" y=\"138\" textLength=\"503\">coverage</text><text x=\"658\" y=\"148\" textLength=\"330\" fill=\"#000\" opacity=\".25\">${COV}%</text><text x=\"648\" y=\"138\" textLength=\"330\">${COV}%</text></g></svg>"
+
+        # Save the badge
+        echo "$BADGE_SVG" > badges/coverage.svg
+        
+        # Commit and push if there are changes
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git add badges/coverage.svg
+        git commit -m "Update coverage badge [skip ci]" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload coverage report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 7 

@@ -17,7 +17,7 @@
 - **Modern API**: Clean, chainable interface for building controls
 - **Responsive**: Works across desktop and mobile devices
 - **Highly Customizable**: Easily themed with CSS variables
-- **Compatible**: Inspired by and compatible with lil-gui and dat-gui
+- **Compatible**: Inspired by and compatible with lil-gui and dat-gui as a drop-in replacement
 - **Fully Typed**: Written in TypeScript with complete type definitions
 
 ## 📦 Installation

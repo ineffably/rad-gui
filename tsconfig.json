@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./lib",
+    "rootDir": "./src",
     "incremental": true,
     "module": "commonjs",
     "target": "ES2022",
@@ -20,10 +21,13 @@
     "declaration": true
   },
   "include": [
-    "./src/**/*",
+    "src",
   ],
   "exclude": [
-    "./test/**/*"
+    "./test/**/*",
+    "./docs/**/*",
+    "./examples/**/*",
+    "./index.html",
   ]
 }
 

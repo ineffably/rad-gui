@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
 const outDir = 'lib';
 
 module.exports = (env = {}, argv) => {
@@ -43,10 +44,9 @@ module.exports = (env = {}, argv) => {
       extensions: ['.ts', '.js']
     },
     plugins: [
+      new BundleStatsWebpackPlugin(),
       new HtmlWebpackPlugin({
-        template: path.join(__dirname, templatePath),
-        inject: true,
-        scriptLoading: 'blocking'
+        template: path.join(__dirname, templatePath)
       }),
     ]
   }

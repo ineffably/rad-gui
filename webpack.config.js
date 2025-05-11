@@ -12,6 +12,15 @@ module.exports = (env = {}, argv) => {
     templatePath = env.template;
   }
 
+  const plugins = [];
+
+  if (mode === 'development') {
+    plugins.push(new BundleStatsWebpackPlugin());
+    plugins.push(new HtmlWebpackPlugin({
+      template: path.join(__dirname, templatePath)
+    }));
+  }
+
   const config = {
     mode,
     entry: './src/index.ts',
@@ -43,12 +52,7 @@ module.exports = (env = {}, argv) => {
     resolve: {
       extensions: ['.ts', '.js']
     },
-    plugins: [
-      new BundleStatsWebpackPlugin(),
-      new HtmlWebpackPlugin({
-        template: path.join(__dirname, templatePath)
-      }),
-    ]
+    plugins 
   }
 
   if (mode === 'development') {

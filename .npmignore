@@ -1,4 +1,36 @@
-index.html
-bundle-stats.html
+# Development files
+node_modules/
+src/
+examples/
+tests/
+coverage/
+.github/
+.vscode/
+docs/
+test/
+package.json
+readme.md
+usage.md
+
+# Config files
+.gitignore
+.eslintrc
+.prettierrc
+jest.config.js
+tsconfig.json
+webpack.config.js
+
+# Build artifacts
+lib/bundle-stats.html
 bundle-stats.json
 
+# webpack dev-server files
+lib/index.html
+index.html
+custom.css
+_index.html
+
+# Documentation source
+*.md
+!README.md
+!LICENSE

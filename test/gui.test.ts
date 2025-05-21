@@ -5,8 +5,16 @@ import TextControl from '../src/controls/text-control';
 import FunctionControl from '../src/controls/function-control';
 import OptionControl from '../src/controls/option-control';
 import ColorControl from '../src/controls/color-control';
+import * as injectStylesModule from '../src/library/inject-styles';
 
-// Mock the style injection to avoid polluting the test environment
+// Mock the style injection module
+jest.mock('../src/library/inject-styles', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  hasInjectedStyles: jest.fn().mockReturnValue(false),
+}));
+
+// Mock the CSS import
 jest.mock('../src/rad-gui.css', () => ({}));
 
 describe('GUI', () => {
@@ -39,6 +47,10 @@ describe('GUI', () => {
     
     // Reset console.error mock
     (console.error as jest.Mock).mockClear();
+
+    // Reset injectStyles mocks
+    (injectStylesModule.default as jest.Mock).mockClear();
+    (injectStylesModule.hasInjectedStyles as jest.Mock).mockReturnValue(false);
     
     // Create new GUI instance
     gui = new GUI({ autoPlace: false });
@@ -83,6 +95,64 @@ describe('GUI', () => {
       const titleGui = new GUI({ title: 'Custom Title', autoPlace: false });
       expect(titleGui.$title.textContent).toBe('Custom Title');
       expect(titleGui._title).toBe('Custom Title');
+    });
+
+    it('should call injectStyles for root GUI when injectStyles is true and styles not already injected', () => {
+      // Reset for this test
+      (injectStylesModule.default as jest.Mock).mockClear();
+      (injectStylesModule.hasInjectedStyles as jest.Mock).mockReturnValue(false);
+      
+      // Create a new GUI instance
+      const newGui = new GUI({ autoPlace: false });
+      
+      // Should have called injectStyles
+      expect(injectStylesModule.default).toHaveBeenCalled();
+      
+      // Clean up
+      newGui.destroy();
+    });
+    
+    it('should not call injectStyles for root GUI when injectStyles is false', () => {
+      // Reset for this test
+      (injectStylesModule.default as jest.Mock).mockClear();
+      
+      // Create a new GUI instance with injectStyles: false
+      const newGui = new GUI({ autoPlace: false, injectStyles: false });
+      
+      // Should not have called injectStyles
+      expect(injectStylesModule.default).not.toHaveBeenCalled();
+      
+      // Clean up
+      newGui.destroy();
+    });
+    
+    it('should not call injectStyles for child GUI', () => {
+      // Reset for this test
+      (injectStylesModule.default as jest.Mock).mockClear();
+      
+      // Create a child GUI
+      const childGui = new GUI({ parent: gui, autoPlace: false });
+      
+      // Should not have called injectStyles
+      expect(injectStylesModule.default).not.toHaveBeenCalled();
+      
+      // Clean up
+      childGui.destroy();
+    });
+    
+    it('should not call injectStyles if styles are already injected', () => {
+      // Reset for this test and mock hasInjectedStyles to return true
+      (injectStylesModule.default as jest.Mock).mockClear();
+      (injectStylesModule.hasInjectedStyles as jest.Mock).mockReturnValue(true);
+      
+      // Create a new GUI instance
+      const newGui = new GUI({ autoPlace: false });
+      
+      // Should not have called injectStyles
+      expect(injectStylesModule.default).not.toHaveBeenCalled();
+      
+      // Clean up
+      newGui.destroy();
     });
   });
 

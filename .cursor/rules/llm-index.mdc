@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+let's create a file called .llm.reference.md 
+in that file place an entire lookup catalog of this codebase as an LLM or agent would easily digest it
+it doesn't need to be human readable, but, should be reasonably verbose. 
+make sure this is updated regularly.
+
+here is an example plain text entry from pixijs:
+TITLE: Loading Textures and Creating Sprites in PixiJS Using TypeScript
+DESCRIPTION: This TypeScript snippet demonstrates asynchronously loading an image texture with PixiJS's Assets loader, then using the loaded texture to create Sprite objects. It includes three ways to create sprites: passing a texture instance directly, passing texture as an options object, and creating a sprite from a texture cached by the loader using Sprite.from(). The snippet requires the PixiJS library and assumes the 'myTexture.png' asset is available on the server. The input is the texture name as a string, and the output is Sprite instances ready for use in the scene graph. This approach handles asynchronous loading and caching of textures efficiently, permitting reuse and optimal performance.
+SOURCE: https://github.com/pixijs/pixijs.com/blob/main/docs/guides/components/textures.md#_snippet_0
+
+LANGUAGE: TypeScript
+CODE:
+```
+const texture = await Assets.load('myTexture.png');
+
+// pass a texture explicitly
+const sprite = new Sprite(texture);
+// as options
+const sprite2 = new Sprite({texture});
+// from the cache as the texture is loaded
+const sprite3 = Sprite.from('myTexture.png')
+```

@@ -1,12 +1,18 @@
 import { GUI } from './gui';
 import { el } from './library/el';
+import injectStyles, { hasInjectedStyles } from './library/inject-styles';
+
+// Import CSS to ensure it's processed by webpack
+import './rad-gui.css';
 
 export default GUI;
 
 // declaring rad as the root namespace for GUI
-(window as any).rad = { GUI, el };
+(window as any).rad = { GUI, el, injectStyles };
 
 export {
   GUI,
-  el 
+  el,
+  injectStyles,
+  hasInjectedStyles
 }

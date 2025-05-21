@@ -1,6 +1,6 @@
 {
   "name": "rad-gui",
-  "version": "0.7.0",
+  "version": "0.9.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "exports": {
@@ -8,7 +8,8 @@
       "import": "./lib/index.js",
       "require": "./lib/index.js",
       "types": "./lib/index.d.ts"
-    }
+    },
+    "./lib/rad-gui.css": "./lib/rad-gui.css"
   },
   "files": [
     "lib/**/*",
@@ -28,7 +29,17 @@
     "local:kitchen-sink": "webpack-dev-server --mode=development --open examples/kitchen-sink/index.html",
     "local:compat": "webpack-dev-server --mode=development --env template=examples/dat-gui-compat.html"
   },
-  "keywords": ["gui", "rad-gui", "lil-gui", "dat-gui", "gui-library", "gui-component", "panels", "panels-html", "data-display" ],
+  "keywords": [
+    "gui",
+    "rad-gui",
+    "lil-gui",
+    "dat-gui",
+    "gui-library",
+    "gui-component",
+    "panels",
+    "panels-html",
+    "data-display"
+  ],
   "author": "Chad Neff <ccneff@gmail.com> (https://github.com/ineffably)",
   "license": "MIT",
   "type": "commonjs",
@@ -50,6 +61,7 @@
     "html-webpack-plugin": "^5.6.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "mini-css-extract-plugin": "^2.9.2",
     "rimraf": "^6.0.1",
     "style-loader": "^4.0.0",
     "ts-jest": "^29.3.2",

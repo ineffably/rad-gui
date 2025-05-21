@@ -5,14 +5,9 @@ import NumberControl from './controls/number-control';
 import OptionControl from './controls/option-control';
 import TextControl from './controls/text-control';
 import { el } from './library/el';
+import injectStyles, { hasInjectedStyles } from './library/inject-styles';
 
 import './rad-gui.css';
-
-let stylesInjected = false;
-const stylesheet = 'pretend me a stylesheet';
-const _injectStyles = (styles) => {
-  console.log('injecting styles', styles);
-}
 
 /**
  * GUI is the main container class for creating control panels
@@ -84,7 +79,7 @@ export class GUI {
     width,
     title = 'Controls',
     closeFolders = false,
-    injectStyles = true,
+    injectStyles: shouldInjectStyles = true,
     touchStyles = true
   } = {} as any) {
     this.parent = parent;
@@ -126,9 +121,9 @@ export class GUI {
 
     this.title(title);
 
-    if (!stylesInjected && injectStyles) {
-      _injectStyles(stylesheet);
-      stylesInjected = true;
+    // Only inject styles when creating a root GUI and styles haven't been injected yet
+    if (!parent && shouldInjectStyles && !hasInjectedStyles()) {
+      injectStyles();
     }
 
     if (container) {

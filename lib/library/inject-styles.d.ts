@@ -1,2 +1,3 @@
-export declare function injectStyles(cssContent: any): void;
+export declare function injectStyles(): void;
+export declare function hasInjectedStyles(): boolean;
 export default injectStyles;

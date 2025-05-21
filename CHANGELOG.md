@@ -5,6 +5,19 @@ All notable changes to rad-gui will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2023-08-28
+
+### Added
+- Full test coverage for the codebase
+- LLM-optimized reference documentation in `.llm.reference.md`
+- Fallback CSS content for test environments
+- Enhanced CSS injection mechanism
+
+### Changed
+- Pre-release version moving toward stability
+- Improved testing architecture
+- Enhanced documentation for AI assistants and agents
+
 ## [0.7.0] - 2023-08-25
 
 ### Added
@@ -25,5 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic theming capabilities with CSS variables
 - Compatibility layer for dat-gui and lil-gui
 
+[0.9.0]: https://github.com/ineffably/rad-gui/compare/v0.7.0...v0.9.0
 [0.7.0]: https://github.com/ineffably/rad-gui/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/ineffably/rad-gui/releases/tag/v0.6.0 

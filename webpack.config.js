@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const outDir = 'lib';
 
 module.exports = (env = {}, argv) => {
@@ -12,7 +13,14 @@ module.exports = (env = {}, argv) => {
     templatePath = env.template;
   }
 
-  const plugins = [];
+  const plugins = [
+    new MiniCssExtractPlugin({
+      filename: 'rad-gui.css'
+    }),
+    new webpack.DefinePlugin({
+      CSS_CONTENT: JSON.stringify(require('fs').readFileSync(path.join(__dirname, 'src/rad-gui.css'), 'utf8'))
+    })
+  ];
 
   if (mode === 'development') {
     plugins.push(new BundleStatsWebpackPlugin());
@@ -45,12 +53,18 @@ module.exports = (env = {}, argv) => {
         },
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader'
+          ],
         }
       ],
     },
     resolve: {
-      extensions: ['.ts', '.js']
+      extensions: ['.ts', '.js'],
+      alias: {
+        'rad-gui/lib/rad-gui.css': path.resolve(__dirname, 'src/rad-gui.css')
+      }
     },
     plugins 
   }

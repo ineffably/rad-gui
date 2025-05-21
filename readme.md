@@ -3,7 +3,7 @@
 <div align="center">
   <img src="https://img.shields.io/badge/TypeScript-Ready-blue" alt="TypeScript Ready">
   <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
-  <img src="https://img.shields.io/badge/Version-0.7.0-orange" alt="Version">
+  <img src="https://img.shields.io/badge/Version-0.9.0-orange" alt="Version">
   <a href="https://github.com/ineffably/rad-gui/actions/workflows/build.yml">
     <img src="https://github.com/ineffably/rad-gui/actions/workflows/build.yml/badge.svg" alt="Build Status">
   </a>
@@ -29,6 +29,7 @@
 - **Highly Customizable**: Easily themed with CSS variables
 - **Compatible**: Inspired by and compatible with lil-gui and dat-gui as a drop-in replacement
 - **Fully Typed**: Written in TypeScript with complete type definitions
+- **AI-Ready**: Includes LLM-optimized codebase reference for AI assistants and agents
 
 ## 📦 Installation
 
@@ -91,6 +92,17 @@ folder.add(params, 'x').step(5).name('X (Step 5)');
 </div>
 
 For API details and reference information, visit the [API Reference](https://yourproject.github.io/rad-gui/).
+
+## 🤖 For AI Assistants and Tools
+
+This project includes a `.llm.reference.md` file specifically designed for AI assistants, agents, and tools to better understand and work with the codebase. This file contains:
+
+- Comprehensive architecture overview
+- Key component descriptions
+- Usage patterns and code examples
+- Core utility functions
+
+AI tools can reference this file to provide more accurate and helpful suggestions when working with rad-gui.
 
 ## 📋 Available Controls
 

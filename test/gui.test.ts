@@ -165,33 +165,33 @@ describe('GUI', () => {
     });
 
     it('should add boolean control', () => {
-      const controller = gui.add(testObject, 'booleanValue', undefined, undefined, undefined);
+      const controller = gui.add(testObject, 'booleanValue');
       expect(controller).toBeInstanceOf(ToggleControl);
       expect(gui.controllers).toContain(controller);
     });
 
     it('should add string control', () => {
-      const controller = gui.add(testObject, 'stringValue', undefined, undefined, undefined);
+      const controller = gui.add(testObject, 'stringValue');
       expect(controller).toBeInstanceOf(TextControl);
       expect(gui.controllers).toContain(controller);
     });
 
     it('should add function control', () => {
-      const controller = gui.add(testObject, 'functionValue', undefined, undefined, undefined);
+      const controller = gui.add(testObject, 'functionValue');
       expect(controller).toBeInstanceOf(FunctionControl);
       expect(gui.controllers).toContain(controller);
     });
 
     it('should add option control when options object provided', () => {
       const options = { a: 1, b: 2, c: 3 };
-      const controller = gui.add(testObject, 'optionValue', options, undefined, undefined);
+      const controller = gui.add(testObject, 'optionValue', options);
       expect(controller).toBeInstanceOf(OptionControl);
       expect(gui.controllers).toContain(controller);
     });
 
     it('should log error when value type is not supported', () => {
       const obj = { unsupported: null };
-      gui.add(obj, 'unsupported', undefined, undefined, undefined);
+      gui.add(obj, 'unsupported');
       expect(console.error).toHaveBeenCalled();
     });
   });
@@ -285,8 +285,8 @@ describe('GUI', () => {
   describe('Save and load', () => {
     beforeEach(() => {
       gui.add(testObject, 'numberValue', 0, 100, 1);
-      gui.add(testObject, 'booleanValue', undefined, undefined, undefined);
-      gui.add(testObject, 'stringValue', undefined, undefined, undefined);
+      gui.add(testObject, 'booleanValue');
+      gui.add(testObject, 'stringValue');
     });
 
     it('should save the state of controllers', () => {
@@ -311,7 +311,7 @@ describe('GUI', () => {
       
       // Create a folder and add a controller
       const folder = testGui.addFolder('TestFolder');
-      folder.add(testObject, 'numberValue', undefined, undefined, undefined);
+      folder.add(testObject, 'numberValue');
       
       // NOTE: The current implementation adds folders in both constructor and addFolder
       // Just check that folder is in the folders array
@@ -362,10 +362,10 @@ describe('GUI', () => {
       };
       
       // Add controller with the same name twice
-      gui.add(obj, 'value', undefined, undefined, undefined);
+      gui.add(obj, 'value');
       
       // Create a second controller with the same property
-      const secondController = gui.add(obj, 'value', undefined, undefined, undefined);
+      const secondController = gui.add(obj, 'value');
       
       // Modify the second controller to have the same name as the first
       secondController._name = 'value';
@@ -392,7 +392,7 @@ describe('GUI', () => {
     let controller;
     
     beforeEach(() => {
-      controller = gui.add(testObject, 'numberValue', undefined, undefined, undefined);
+      controller = gui.add(testObject, 'numberValue');
     });
 
     it('should call onChange handlers', () => {
@@ -444,7 +444,7 @@ describe('GUI', () => {
       gui.onOpenClose(parentOnOpenClose);
       
       const folder = gui.addFolder('Test');
-      const folderController = folder.add(testObject, 'stringValue', undefined, undefined, undefined);
+      const folderController = folder.add(testObject, 'stringValue');
       
       folderController._callOnChange();
       folderController._callOnFinishChange();
@@ -474,7 +474,7 @@ describe('GUI', () => {
 
     it('should destroy all children when destroyed', () => {
       const folder = gui.addFolder('Folder');
-      const controller = folder.add(testObject, 'numberValue', undefined, undefined, undefined);
+      const controller = folder.add(testObject, 'numberValue');
       
       const folderDestroySpy = jest.spyOn(folder, 'destroy');
       
@@ -496,9 +496,9 @@ describe('GUI', () => {
       const testGui = new GUI({ autoPlace: false });
       
       // Add controllers and folders
-      const controller1 = testGui.add(testObject, 'numberValue', undefined, undefined, undefined);
+      const controller1 = testGui.add(testObject, 'numberValue');
       const folder = testGui.addFolder('Folder');
-      const controller2 = folder.add(testObject, 'stringValue', undefined, undefined, undefined);
+      const controller2 = folder.add(testObject, 'stringValue');
       
       // Get all controllers recursively
       const allControllers = testGui.controllersRecursive();
@@ -546,7 +546,7 @@ describe('GUI', () => {
     });
 
     it('should reset all controllers', () => {
-      const controller = gui.add(testObject, 'numberValue', undefined, undefined, undefined);
+      const controller = gui.add(testObject, 'numberValue');
       const resetSpy = jest.spyOn(controller, 'reset');
       
       gui.reset();

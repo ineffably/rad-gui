@@ -143,7 +143,45 @@ export class GUI {
   }
 
   /**
-   * Adds a controller to the GUI
+   * Adds a controller to the GUI for any property type
+   * @param object - Object containing the property to control
+   * @param property - Name of the property to control
+   * @returns The created controller
+   */
+  add<T, K extends keyof T>(object: T, property: K): NumberControl | ToggleControl | TextControl | FunctionControl;
+  
+  /**
+   * Adds a controller to the GUI with options (array or object)
+   * @param object - Object containing the property to control
+   * @param property - Name of the property to control
+   * @param options - Array of values or object with key-value pairs
+   * @returns The created option controller
+   */
+  add<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl;
+  
+  /**
+   * Adds a number controller to the GUI with min and max values
+   * @param object - Object containing the property to control
+   * @param property - Name of the property to control
+   * @param min - Minimum allowed value
+   * @param max - Maximum allowed value
+   * @returns The created number controller
+   */
+  add<T, K extends keyof T>(object: T, property: K, min: number, max: number): NumberControl;
+  
+  /**
+   * Adds a number controller to the GUI with min, max, and step values
+   * @param object - Object containing the property to control
+   * @param property - Name of the property to control
+   * @param min - Minimum allowed value
+   * @param max - Maximum allowed value
+   * @param step - Step size for value increments
+   * @returns The created number controller
+   */
+  add<T, K extends keyof T>(object: T, property: K, min: number, max: number, step: number): NumberControl;
+  
+  /**
+   * Implementation of the add method
    * @param object - Object containing the property to control
    * @param property - Name of the property to control
    * @param $1 - Min value or options object
@@ -151,7 +189,7 @@ export class GUI {
    * @param step - Step size
    * @returns The created controller
    */
-  add(object, property, $1, max, step) {
+  add(object: any, property: any, $1?: any, max?: any, step?: any): NumberControl | ToggleControl | TextControl | FunctionControl | OptionControl {
     if (Object($1) === $1) {
       return new OptionControl(this, object, property, $1);
     }
@@ -170,7 +208,9 @@ export class GUI {
 
     // eslint-disable-next-line no-console
     console.error(`gui.add failed	property:`, property, `	object:`, object, `	value:`, initialValue);
-
+    
+    // Return undefined for failed cases to match TypeScript expectations
+    return undefined as any;
   }
 
   /**
@@ -180,7 +220,7 @@ export class GUI {
    * @param rgbScale - Scale for RGB values (default 1)
    * @returns The created color controller
    */
-  addColor(object, property, rgbScale = 1) {
+  addColor<T, K extends keyof T>(object: T, property: K, rgbScale: number = 1): ColorControl {
     return new ColorControl(this, object, property, rgbScale);
   }
 
@@ -189,7 +229,7 @@ export class GUI {
    * @param title - Title of the folder
    * @returns The created folder (GUI instance)
    */
-  addFolder(title) {
+  addFolder(title: string): GUI {
     const folder = new GUI({ parent: this, title });
     
     // Add the folder to the parent's folders array

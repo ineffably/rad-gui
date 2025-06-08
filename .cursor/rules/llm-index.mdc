@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 let's create a file called .llm.reference.md 
 in that file place an entire lookup catalog of this codebase as an LLM or agent would easily digest it

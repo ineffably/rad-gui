@@ -112,7 +112,12 @@ jobs:
             LINK_ENTRY="[${{ env.NEW_VERSION }}]: https://github.com/ineffably/rad-gui/compare/v$PREVIOUS_VERSION...v${{ env.NEW_VERSION }}\n"
             
             # Insert at the top of the file, after the header
-            sed -i "5s/^/\n$CHANGELOG_ENTRY$LINK_ENTRY/" CHANGELOG.md
+            # Use a temporary file to avoid sed special character issues
+            TEMP_FILE=$(mktemp)
+            head -n 4 CHANGELOG.md > "$TEMP_FILE"
+            printf "\n%b%b" "$CHANGELOG_ENTRY" "$LINK_ENTRY" >> "$TEMP_FILE"
+            tail -n +5 CHANGELOG.md >> "$TEMP_FILE"
+            mv "$TEMP_FILE" CHANGELOG.md
             
             # Commit the updated changelog
             git add CHANGELOG.md
@@ -146,12 +151,21 @@ jobs:
         VERSION="${{ env.NEW_VERSION }}"
         
         # Read the latest release notes from CHANGELOG.md
-        CHANGELOG_SECTION=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d')
+        # Escape the version for sed to handle brackets safely
+        ESCAPED_VERSION=$(printf '%s\n' "$VERSION" | sed 's/[[\.*^$()+?{|]/\\&/g')
+        CHANGELOG_SECTION=$(sed -n "/## \[$ESCAPED_VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d')
+        
+        # Create a temporary file for release notes to handle special characters
+        TEMP_NOTES=$(mktemp)
+        printf '%s' "$CHANGELOG_SECTION" > "$TEMP_NOTES"
         
         # Create a GitHub release with the changelog
         gh release create v$VERSION \
           --title "Release v$VERSION" \
-          --notes "$CHANGELOG_SECTION" \
+          --notes-file "$TEMP_NOTES" \
           rad-gui-*.tgz
+        
+        # Clean up temp file  
+        rm "$TEMP_NOTES"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

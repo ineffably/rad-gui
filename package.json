@@ -1,6 +1,6 @@
 {
   "name": "rad-gui",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "exports": {

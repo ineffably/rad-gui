@@ -3,6 +3,16 @@
 All notable changes to rad-gui will be documented in this file.
 
 
+## [0.10.0] - 2025-07-25
+
+### Added
+- Enhance TypeScript support with comprehensive type definitions and examples
+
+### Changed
+- reorganize utils to library folder and update TypeScript documentation
+
+[0.10.0]: https://github.com/ineffably/rad-gui/compare/v0.9.1...v0.10.0
+
 ## [0.9.1] - 2025-06-08
 
 ### Added

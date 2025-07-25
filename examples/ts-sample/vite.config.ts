@@ -7,7 +7,9 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        main: './index.html'
+        main: './index.html',
+        radgui: './rad-gui-example.html',
+        home: './examples-home.html'
       }
     }
   },

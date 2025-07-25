@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUI vs RadGUI Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .demo-box {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            border: 2px solid #333;
+            transition: all 0.3s ease;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .code {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-left: 4px solid #007acc;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎛️ rad-gui API Comparison: GUI vs RadGUI</h1>
+    
+    <div class="container">
+        <!-- Traditional GUI approach -->
+        <div class="section">
+            <h2>Traditional GUI (Property-Based)</h2>
+            <div class="code">
+<strong>// Traditional approach - controls modify object properties</strong>
+const appState = {
+  size: 50,
+  color: '#ff0000',
+  rotation: 0,
+  enabled: true,
+  reset: () => { /* reset logic */ }
+};
+
+const gui = new GUI();
+gui.add(appState, 'size', 20, 100);
+gui.addColor(appState, 'color');
+gui.add(appState, 'rotation', 0, 360);
+gui.add(appState, 'enabled');
+gui.add(appState, 'reset').name('Reset All');
+            </div>
+            
+            <div id="demo-box-1" class="demo-box"></div>
+            <div class="status" id="status-1">Ready</div>
+        </div>
+
+        <!-- New RadGUI approach -->
+        <div class="section">
+            <h2>RadGUI (Direct Methods)</h2>
+            <div class="code">
+<strong>// RadGUI approach - direct method calls</strong>
+const appState2 = {
+  size: 50,
+  color: '#0088ff',
+  rotation: 0,
+  enabled: true
+};
+
+const radGui = new RadGUI();
+radGui.addNumber(appState2, 'size', 20, 100);
+radGui.addColor(appState2, 'color');
+radGui.addNumber(appState2, 'rotation', 0, 360);
+radGui.addText(appState2, 'enabled');
+radGui.addButton('Reset All', () => { /* reset logic */ });
+            </div>
+            
+            <div id="demo-box-2" class="demo-box"></div>
+            <div class="status" id="status-2">Ready</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GUI, RadGUI } from '../src/index.js';
+
+        // Demo objects
+        const appState1 = {
+            size: 50,
+            color: '#ff0000',
+            rotation: 0,
+            enabled: true,
+            reset: function() {
+                this.size = 50;
+                this.color = '#ff0000';
+                this.rotation = 0;
+                this.enabled = true;
+                gui1.controllersRecursive().forEach(c => c.updateDisplay());
+                updateBox1();
+                updateStatus1('Reset to defaults');
+            }
+        };
+
+        const appState2 = {
+            size: 50,
+            color: '#0088ff',
+            rotation: 0,
+            enabled: true
+        };
+
+        // Traditional GUI setup
+        const gui1 = new GUI({ 
+            title: 'Traditional GUI',
+            autoPlace: false 
+        });
+        document.querySelector('.section:first-child').appendChild(gui1.domElement);
+
+        gui1.add(appState1, 'size', 20, 100)
+            .name('Box Size')
+            .onChange(updateBox1);
+        
+        gui1.addColor(appState1, 'color')
+            .name('Color')
+            .onChange(updateBox1);
+        
+        gui1.add(appState1, 'rotation', 0, 360)
+            .name('Rotation')
+            .onChange(updateBox1);
+        
+        gui1.add(appState1, 'enabled')
+            .name('Enabled')
+            .onChange(updateBox1);
+        
+        gui1.add(appState1, 'reset')
+            .name('Reset All');
+
+        // RadGUI setup
+        const gui2 = new RadGUI({ 
+            title: 'RadGUI',
+            autoPlace: false 
+        });
+        document.querySelector('.section:last-child').appendChild(gui2.domElement);
+
+        gui2.addNumber(appState2, 'size', 20, 100)
+            .name('Box Size')
+            .onChange(updateBox2);
+        
+        gui2.addColor(appState2, 'color')
+            .name('Color')
+            .onChange(updateBox2);
+        
+        gui2.addNumber(appState2, 'rotation', 0, 360)
+            .name('Rotation')
+            .onChange(updateBox2);
+        
+        gui2.addText(appState2, 'enabled')
+            .name('Enabled (Text)')
+            .onChange(updateBox2);
+        
+        gui2.addButton('Reset All', () => {
+            appState2.size = 50;
+            appState2.color = '#0088ff';
+            appState2.rotation = 0;
+            appState2.enabled = true;
+            gui2.controllersRecursive().forEach(c => c.updateDisplay());
+            updateBox2();
+            updateStatus2('Reset to defaults');
+        });
+
+        // Update functions
+        function updateBox1() {
+            const box = document.getElementById('demo-box-1');
+            box.style.width = appState1.size + 'px';
+            box.style.height = appState1.size + 'px';
+            box.style.backgroundColor = appState1.color;
+            box.style.transform = `rotate(${appState1.rotation}deg)`;
+            box.style.opacity = appState1.enabled ? '1' : '0.3';
+            updateStatus1(`Size: ${appState1.size}, Color: ${appState1.color}, Rotation: ${appState1.rotation}°`);
+        }
+
+        function updateBox2() {
+            const box = document.getElementById('demo-box-2');
+            box.style.width = appState2.size + 'px';
+            box.style.height = appState2.size + 'px';
+            box.style.backgroundColor = appState2.color;
+            box.style.transform = `rotate(${appState2.rotation}deg)`;
+            box.style.opacity = appState2.enabled === 'true' || appState2.enabled === true ? '1' : '0.3';
+            updateStatus2(`Size: ${appState2.size}, Color: ${appState2.color}, Rotation: ${appState2.rotation}°`);
+        }
+
+        function updateStatus1(message) {
+            document.getElementById('status-1').textContent = message;
+        }
+
+        function updateStatus2(message) {
+            document.getElementById('status-2').textContent = message;
+        }
+
+        // Global change handlers
+        gui1.onChange((data) => {
+            updateStatus1(`${data.property} changed to: ${data.value}`);
+        });
+
+        gui2.onChange((data) => {
+            updateStatus2(`${data.property} changed to: ${data.value}`);
+        });
+
+        // Initial render
+        updateBox1();
+        updateBox2();
+    </script>
+</body>
+</html> 

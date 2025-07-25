@@ -13,6 +13,67 @@
             min-height: 100vh;
             color: white;
         }
+
+        .example-nav {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .nav-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .nav-link:not(.active) {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+        }
+
+        .nav-link:not(.active):hover {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav-link {
+                width: 200px;
+            }
+        }
         
         .container {
             max-width: 800px;
@@ -67,6 +128,15 @@
 </head>
 <body>
     <div class="container">
+        <nav class="example-nav">
+            <div class="nav-title">📚 Rad GUI Examples</div>
+            <div class="nav-links">
+                <span class="nav-link active">🎯 Traditional GUI</span>
+                <a href="rad-gui-example.html" class="nav-link">🆕 RadGUI (Component API)</a>
+                <a href="examples-home.html" class="nav-link">🏠 Examples Home</a>
+            </div>
+        </nav>
+
         <h1>🎛️ Rad GUI TypeScript Example</h1>
         
         <div class="demo-area">

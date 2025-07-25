@@ -1,6 +1,6 @@
-# Rad GUI TypeScript Example
+# Rad GUI TypeScript Examples
 
-This is a comprehensive TypeScript example demonstrating all the features and capabilities of the rad-gui library.
+This directory contains comprehensive TypeScript examples demonstrating all the features and capabilities of the rad-gui library, including both the traditional `GUI` class and the new `RadGUI` class.
 
 ## Features Demonstrated
 
@@ -33,6 +33,25 @@ The example includes an animated box that responds to all control changes in rea
 - Node.js (v18+ recommended)
 - npm or yarn
 
+### Available Examples
+
+1. **Examples Home** (`examples-home.html`)
+   - Landing page with easy navigation between examples
+   - Side-by-side API comparison
+   - Feature overview and selection guide
+
+2. **Traditional GUI Example** (`index.html` + `main.ts`)
+   - Demonstrates the classic rad-gui API with property-based controls
+   - Uses the `GUI` class with automatic type detection
+   - Comprehensive feature showcase
+
+3. **RadGUI Example** (`rad-gui-example.html` + `rad-gui-example.ts`)
+   - Showcases the new `RadGUI` class with explicit method-based API
+   - Features `addButton()`, `addNumber()`, `addText()`, etc.
+   - Component-friendly approach for easier migration
+
+**🧭 Easy Navigation:** Each example includes a navigation bar at the top for quick switching between examples.
+
 ### Installation
 
 1. Install dependencies:
@@ -45,7 +64,10 @@ npm install
 npm run dev
 ```
 
-3. Open your browser to `http://localhost:3000`
+3. Open your browser to:
+   - `http://localhost:3000/examples-home.html` for the landing page with navigation
+   - `http://localhost:3000` for the traditional GUI example
+   - `http://localhost:3000/rad-gui-example.html` for the RadGUI example
 
 ### Building for Production
 
@@ -73,25 +95,26 @@ HTML structure with modern styling and the animated demo element.
 
 ## Usage Examples
 
-### Basic Control Creation
+### Traditional GUI Control Creation
 ```typescript
-// Number control with min, max, and step
-gui.add(object, 'property', 0, 100, 1);
+// Auto-detecting add method
+gui.add(object, 'property', 0, 100, 1); // Number with range
+gui.add(object, 'enabled');              // Boolean toggle
+gui.add(object, 'text');                 // Text input
+gui.addColor(object, 'color');           // Color picker
+gui.add(object, 'mode', ['opt1', 'opt2']); // Dropdown
+gui.add(object, 'action');               // Button (function property)
+```
 
-// Boolean toggle
-gui.add(object, 'enabled');
-
-// Text input
-gui.add(object, 'text');
-
-// Color picker
-gui.addColor(object, 'color');
-
-// Dropdown options
-gui.add(object, 'mode', ['option1', 'option2', 'option3']);
-
-// Button action
-gui.add(object, 'action');
+### RadGUI Explicit Control Creation
+```typescript
+// Explicit method calls
+radGui.addNumber(object, 'property', 0, 100, 1);
+radGui.addText(object, 'enabled');       // Note: text representation
+radGui.addText(object, 'text');
+radGui.addColor(object, 'color');
+radGui.addOption(object, 'mode', ['opt1', 'opt2']);
+radGui.addButton('Action Name', () => { /* callback */ });
 ```
 
 ### Folder Organization

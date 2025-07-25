@@ -4,12 +4,46 @@ This guide demonstrates how to use the Rad-GUI library to create interactive UI 
 
 ## Basic Setup
 
+### JavaScript (Browser)
 ```javascript
 // Import the GUI class
 const { GUI } = rad;
 
 // Create a new GUI instance
 const gui = new GUI();
+```
+
+### JavaScript (ES Modules)
+```javascript
+import { GUI } from 'rad-gui';
+import 'rad-gui/lib/rad-gui.css';
+
+const gui = new GUI();
+```
+
+### TypeScript
+```typescript
+import { GUI, ControlEventData, GuiOptions } from 'rad-gui';
+import 'rad-gui/lib/rad-gui.css';
+
+// Define your parameter interface for type safety
+interface AppParams {
+  rotation: number;
+  scale: number;
+  color: string;
+  visible: boolean;
+  mode: string;
+  reset: () => void;
+}
+
+// Create GUI with typed options
+const options: GuiOptions = {
+  title: 'App Controls',
+  width: 300,
+  closeFolders: false
+};
+
+const gui = new GUI(options);
 ```
 
 ## Creating Basic Controls
@@ -186,6 +220,33 @@ gui.onChange((event) => {
 
 gui.onFinishChange((event) => {
   console.log('Any value finished changing:', event.property, event.value);
+});
+```
+
+### TypeScript Event Handling
+```typescript
+// Type-safe event handling with structured data
+gui.onChange((data: ControlEventData) => {
+  console.log(`Property ${data.property} changed to:`, data.value);
+  console.log('Object:', data.object);
+  console.log('Controller:', data.controller);
+});
+
+// Specific control event handling with type inference
+gui.add(params, 'rotation', 0, 360)
+  .onChange((data: ControlEventData<number>) => {
+    // data.value is typed as number
+    console.log('Rotation changed to:', data.value);
+  })
+  .onFinishChange((data: ControlEventData<number>) => {
+    // Called when user stops dragging/typing
+    console.log('Final rotation:', data.value);
+  });
+
+// Open/close events with GUI typing
+gui.onOpenClose((changedGui: GUI) => {
+  const isOpen = !changedGui._closed;
+  console.log(`Folder "${changedGui._title}" is now ${isOpen ? 'open' : 'closed'}`);
 });
 ```
 

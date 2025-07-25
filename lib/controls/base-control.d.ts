@@ -17,11 +17,11 @@ export default class BaseControl {
     _listening: boolean;
     _listenCallbackID: any;
     _listenPrevValue: any;
-    constructor(parent: any, object: any, property: any, className: any, elementType?: keyof HTMLElementTagNameMap);
-    name(name: any): this;
-    onChange(callback: any): this;
+    constructor(parent: any, object: Record<string, any>, property: string, className: string, elementType?: keyof HTMLElementTagNameMap);
+    name(name: string): this;
+    onChange(callback: (data: { object: any; property: string; value: any; controller: any }) => void): this;
     _callOnChange(): void;
-    onFinishChange(callback: any): this;
+    onFinishChange(callback: (data: { object: any; property: string; value: any; controller: any }) => void): this;
     _callOnFinishChange(): void;
     reset(): this;
     enable(enabled?: boolean): this;
@@ -37,6 +37,7 @@ export default class BaseControl {
     _listenCallback(): void;
     getValue(): any;
     setValue(value: any): this;
+    updateDisplay(): this;
     update(): this;
     load(value: any): this;
     save(): any;

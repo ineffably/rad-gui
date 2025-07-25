@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rad GUI - TypeScript Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .demo-area {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .animated-box {
+            width: 100px;
+            height: 100px;
+            background: #ff6b6b;
+            margin: 20px auto;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #4ecdc4;
+        }
+        
+        .status {
+            margin-top: 10px;
+            font-family: monospace;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎛️ Rad GUI TypeScript Example</h1>
+        
+        <div class="demo-area">
+            <div id="animated-box" class="animated-box">
+                Box
+            </div>
+            
+            <div class="info">
+                <strong>Interactive Demo:</strong> Use the controls on the right to modify the box properties, colors, and animations in real-time.
+            </div>
+            
+            <div class="status" id="status">
+                Ready - Interact with the controls to see live updates
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="./main.ts"></script>
+</body>
+</html> 

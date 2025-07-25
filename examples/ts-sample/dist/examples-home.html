@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎛️ Rad GUI TypeScript Examples</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 50px;
+            opacity: 0.9;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .example-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 40px 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .example-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .example-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .example-description {
+            font-size: 1.1em;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .example-features {
+            font-size: 0.9em;
+            opacity: 0.8;
+            text-align: left;
+        }
+
+        .example-features ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .example-features li {
+            margin-bottom: 5px;
+        }
+
+        .comparison-table {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 50px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .comparison-table h3 {
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            text-align: left;
+        }
+
+        .code-example {
+            background: rgba(0,0,0,0.4);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎛️ Rad GUI TypeScript Examples</h1>
+        <p class="subtitle">
+            Comprehensive demonstrations of the rad-gui library with full TypeScript support
+        </p>
+
+        <div class="examples-grid">
+            <a href="index.html" class="example-card">
+                <span class="example-icon">🎯</span>
+                <div class="example-title">Traditional GUI</div>
+                <div class="example-description">
+                    Classic property-based API with automatic type detection. Perfect for rapid prototyping and familiar workflows.
+                </div>
+                <div class="example-features">
+                    <strong>Features:</strong>
+                    <ul>
+                        <li>Automatic control type detection</li>
+                        <li>Property-based API</li>
+                        <li>Familiar dat.gui-style interface</li>
+                        <li>Minimal setup required</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="rad-gui-example.html" class="example-card">
+                <span class="example-icon">🆕</span>
+                <div class="example-title">RadGUI (Component API)</div>
+                <div class="example-description">
+                    Explicit method-based API for clear, self-documenting code. Ideal for TypeScript projects and component-based workflows.
+                </div>
+                <div class="example-features">
+                    <strong>Features:</strong>
+                    <ul>
+                        <li>Explicit method calls (addButton, addToggle)</li>
+                        <li>Enhanced TypeScript support</li>
+                        <li>Component-friendly design</li>
+                        <li>Better IntelliSense experience</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+
+        <div class="comparison-table">
+            <h3>📊 API Comparison</h3>
+            <div class="comparison-grid">
+                <div>
+                    <h4>🎯 Traditional GUI</h4>
+                    <div class="code-example">
+// Auto-detecting controls
+gui.<span class="highlight">add</span>(object, 'size', 0, 100);
+gui.<span class="highlight">add</span>(object, 'enabled');
+gui.<span class="highlight">add</span>(object, 'text');
+gui.<span class="highlight">addColor</span>(object, 'color');
+gui.<span class="highlight">add</span>(object, 'options', ['a', 'b']);
+                    </div>
+                </div>
+                <div>
+                    <h4>🆕 RadGUI</h4>
+                    <div class="code-example">
+// Explicit method calls
+radGui.<span class="highlight">addNumber</span>(object, 'size', 0, 100);
+radGui.<span class="highlight">addToggle</span>(object, 'enabled');
+radGui.<span class="highlight">addText</span>(object, 'text');
+radGui.<span class="highlight">addColor</span>(object, 'color');
+radGui.<span class="highlight">addOption</span>(object, 'options', ['a', 'b']);
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                Both examples showcase the full feature set including folders, event handling, 
+                save/load functionality, and real-time interactive demonstrations.
+            </p>
+            <p>
+                <strong>Choose the API that best fits your workflow!</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html> 

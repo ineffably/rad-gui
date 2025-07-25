@@ -8,6 +8,7 @@ import { el } from './library/el';
 import injectStyles, { hasInjectedStyles } from './library/inject-styles';
 
 import './rad-gui.css';
+import BaseControl from './controls/base-control';
 
 /**
  * GUI is the main container class for creating control panels
@@ -562,6 +563,75 @@ export class GUI {
     
     // Convert Set to Array and return
     return Array.from(folderSet);
+  }
+
+}
+
+export class RadGUI extends GUI {
+  constructor(options: any) {
+    super(options);
+  }
+
+  addFolder(title: string): RadGUI {
+    const folder = new RadGUI({ parent: this, title });
+    // Note: folder is automatically added to this.folders and this.children by GUI constructor
+    this.$children.appendChild(folder.domElement);
+    return folder;
+  }
+
+  addButton(title: string, callback: () => void): FunctionControl {
+    const button = new FunctionControl(this, { [title]: callback }, title);
+    return button;
+  }
+
+  addColor<T, K extends keyof T>(object: T, property: K, rgbScale: number = 1): ColorControl {
+    const color = new ColorControl(this, object, property, rgbScale);
+    return color;
+  }
+
+  addNumber<T, K extends keyof T>(object: T, property: K): NumberControl;
+  addNumber<T, K extends keyof T>(object: T, property: K, min: number, max: number): NumberControl;
+  addNumber<T, K extends keyof T>(object: T, property: K, min: number, max: number, step: number): NumberControl;
+  addNumber<T, K extends keyof T>(object: T, property: K, min?: number, max?: number, step?: number): NumberControl {
+    const number = new NumberControl(this, object, property as string, min, max, step);
+    return number;
+  }
+
+  addToggle<T, K extends keyof T>(object: T, property: K): ToggleControl {
+    const toggle = new ToggleControl(this, object, property as string);
+    return toggle;
+  }
+
+  addOption<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl {
+    const option = new OptionControl(this, object, property as string, options);
+    return option;
+  }
+
+  addText<T, K extends keyof T>(object: T, property: K): TextControl {
+    const text = new TextControl(this, object, property as string);
+    return text;
+  }
+
+  remove(controller: BaseControl) {
+    const childIndex = this.children.indexOf(controller);
+    if (childIndex !== -1) {
+      this.children.splice(childIndex, 1);
+    }
+    
+    const controllerIndex = this.controllers.indexOf(controller);
+    if (controllerIndex !== -1) {
+      this.controllers.splice(controllerIndex, 1);
+    }
+    
+    if (controller.domElement && controller.domElement.parentNode === this.$children) {
+      this.$children.removeChild(controller.domElement);
+    }
+  }
+
+  reset(recursive = true) {
+    const controllers = recursive ? this.controllersRecursive() : this.controllers;
+    controllers.forEach(c => c.reset());
+    return this;
   }
 
 }

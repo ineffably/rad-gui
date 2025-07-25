@@ -5,6 +5,7 @@ import NumberControl from './controls/number-control';
 import OptionControl from './controls/option-control';
 import TextControl from './controls/text-control';
 import './rad-gui.css';
+import BaseControl from './controls/base-control';
 export declare class GUI {
     parent: GUI;
     autoPlace: boolean;
@@ -30,16 +31,7 @@ export declare class GUI {
     _onFinishChangeCallback: any;
     _onChangeCallback: any;
     _onOpenCloseCallback: any;
-    constructor(options?: {
-        parent?: GUI;
-        autoPlace?: boolean;
-        container?: HTMLElement;
-        width?: number;
-        title?: string;
-        closeFolders?: boolean;
-        injectStyles?: boolean;
-        touchStyles?: boolean;
-    });
+    constructor({ parent, autoPlace, container, width, title, closeFolders, injectStyles: shouldInjectStyles, touchStyles }?: any);
     add<T, K extends keyof T>(object: T, property: K): NumberControl | ToggleControl | TextControl | FunctionControl;
     add<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl;
     add<T, K extends keyof T>(object: T, property: K, min: number, max: number): NumberControl;
@@ -60,14 +52,28 @@ export declare class GUI {
     openAnimated(open?: boolean): this;
     title(title: any): this;
     reset(recursive?: boolean): this;
-    onChange(callback: (data: { object: any; property: string; value: any; controller: any }) => void): this;
+    onChange(callback: any): this;
     _callOnChange(controller: any): void;
-    onFinishChange(callback: (data: { object: any; property: string; value: any; controller: any }) => void): this;
+    onFinishChange(callback: any): this;
     _callOnFinishChange(controller: any): void;
-    onOpenClose(callback: (gui: GUI) => void): this;
+    onOpenClose(callback: any): this;
     _callOnOpenClose(changedGUI: any): void;
     destroy(): void;
     controllersRecursive(): any[];
     foldersRecursive(): unknown[];
+}
+export declare class RadGUI extends GUI {
+    constructor(options: any);
+    addFolder(title: string): RadGUI;
+    addButton(title: string, callback: () => void): FunctionControl;
+    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ColorControl;
+    addNumber<T, K extends keyof T>(object: T, property: K): NumberControl;
+    addNumber<T, K extends keyof T>(object: T, property: K, min: number, max: number): NumberControl;
+    addNumber<T, K extends keyof T>(object: T, property: K, min: number, max: number, step: number): NumberControl;
+    addToggle<T, K extends keyof T>(object: T, property: K): ToggleControl;
+    addOption<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl;
+    addText<T, K extends keyof T>(object: T, property: K): TextControl;
+    remove(controller: BaseControl): void;
+    reset(recursive?: boolean): this;
 }
 export default GUI;

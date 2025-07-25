@@ -1,4 +1,4 @@
-import { GUI } from './gui';
+import { GUI, RadGUI } from './gui';
 import { el } from './library/el';
 import injectStyles, { hasInjectedStyles } from './library/inject-styles';
 
@@ -8,10 +8,11 @@ import './rad-gui.css';
 export default GUI;
 
 // declaring rad as the root namespace for GUI
-(window as any).rad = { GUI, el, injectStyles };
+(window as any).rad = { GUI, RadGUI, el, injectStyles };
 
 export {
   GUI,
+  RadGUI,
   el,
   injectStyles,
   hasInjectedStyles

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎛️ RadGUI TypeScript Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .example-nav {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .nav-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-link.active {
+            background: #4299e1;
+            color: white;
+            border-color: #3182ce;
+        }
+
+        .nav-link:not(.active) {
+            background: #f7fafc;
+            color: #4a5568;
+            border-color: #e2e8f0;
+        }
+
+        .nav-link:not(.active):hover {
+            background: #edf2f7;
+            color: #2d3748;
+            transform: translateY(-2px);
+            border-color: #cbd5e0;
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav-link {
+                width: 200px;
+            }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .demo-area {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin: 0 0 20px 0;
+            color: #4a5568;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .animated-box {
+            width: 140px;
+            height: 140px;
+            margin: 40px auto;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            font-size: 1.1em;
+        }
+
+        .animated-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .info {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #4299e1;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .info code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #4299e1;
+        }
+
+        .status {
+            background: #f0fff4;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 20px 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 14px;
+            color: #38a169;
+            border-left: 4px solid #48bb78;
+            text-align: center;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <nav class="example-nav">
+            <div class="nav-title">📚 Rad GUI Examples</div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🎯 Traditional GUI</a>
+                <span class="nav-link active">🆕 RadGUI (Component API)</span>
+                <a href="examples-home.html" class="nav-link">🏠 Examples Home</a>
+            </div>
+        </nav>
+
+        <div class="container">
+        <div class="demo-area">
+            <h1>🆕 RadGUI TypeScript</h1>
+            <p class="subtitle">Component-based API with explicit methods</p>
+            
+            <div id="animated-box" class="animated-box">Interactive Box</div>
+            
+            <div class="info">
+                <strong>✨ RadGUI Demo:</strong> Use the controls on the right to interact with the box. 
+                This example showcases explicit methods like <code>addButton()</code>, <code>addToggle()</code>, and <code>addNumber()</code>.
+            </div>
+            
+            <div class="status" id="status">Ready - Use the controls to interact with the box</div>
+        </div>
+    </div>
+    </div>
+
+    <script type="module" src="./rad-gui-example.ts"></script>
+</body>
+</html> 

@@ -30,7 +30,16 @@ export declare class GUI {
     _onFinishChangeCallback: any;
     _onChangeCallback: any;
     _onOpenCloseCallback: any;
-    constructor({ parent, autoPlace, container, width, title, closeFolders, injectStyles: shouldInjectStyles, touchStyles }?: any);
+    constructor(options?: {
+        parent?: GUI;
+        autoPlace?: boolean;
+        container?: HTMLElement;
+        width?: number;
+        title?: string;
+        closeFolders?: boolean;
+        injectStyles?: boolean;
+        touchStyles?: boolean;
+    });
     add<T, K extends keyof T>(object: T, property: K): NumberControl | ToggleControl | TextControl | FunctionControl;
     add<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl;
     add<T, K extends keyof T>(object: T, property: K, min: number, max: number): NumberControl;
@@ -51,11 +60,11 @@ export declare class GUI {
     openAnimated(open?: boolean): this;
     title(title: any): this;
     reset(recursive?: boolean): this;
-    onChange(callback: any): this;
+    onChange(callback: (data: { object: any; property: string; value: any; controller: any }) => void): this;
     _callOnChange(controller: any): void;
-    onFinishChange(callback: any): this;
+    onFinishChange(callback: (data: { object: any; property: string; value: any; controller: any }) => void): this;
     _callOnFinishChange(controller: any): void;
-    onOpenClose(callback: any): this;
+    onOpenClose(callback: (gui: GUI) => void): this;
     _callOnOpenClose(changedGUI: any): void;
     destroy(): void;
     controllersRecursive(): any[];

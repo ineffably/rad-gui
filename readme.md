@@ -43,20 +43,107 @@ yarn add rad-gui
 
 ## 🚀 Quick Start
 
+### JavaScript
 ```javascript
 import { GUI } from 'rad-gui';
 import 'rad-gui/lib/rad-gui.css';
 
 // Create a GUI instance
-const gui = new GUI({ title: 'My Controls' });
+const gui = new GUI();
+const params = { x: 0, y: 0, color: '#ff0000' };
 
-// Create an object to store our parameters
-const params = {
-  color: '#aa00ff',
-  x: 50,
-  y: 25,
-  enabled: true,
-  option: 'A',
+gui.add(params, 'x', 0, 100);
+gui.addColor(params, 'color');
+```
+
+### TypeScript  
+```typescript
+import { GUI, ControlEventData } from 'rad-gui';
+import 'rad-gui/lib/rad-gui.css';
+
+interface DemoParams {
+  x: number;
+  y: number;
+  color: string;
+  enabled: boolean;
+}
+
+const gui = new GUI({ title: 'Controls', width: 300 });
+const params: DemoParams = { x: 0, y: 0, color: '#ff0000', enabled: true };
+
+// Full type safety and IntelliSense support
+gui.add(params, 'x', 0, 100)
+  .onChange((data: ControlEventData<number>) => {
+    console.log(`X changed to ${data.value}`);
+  });
+
+gui.addColor(params, 'color');
+gui.add(params, 'enabled');
+```
+
+For a complete example, see our [TypeScript Example](examples/ts-sample/) which demonstrates all features with proper typing.
+
+## 📚 Documentation
+
+RAD-GUI provides comprehensive type definitions and IntelliSense support for TypeScript projects. The library includes:
+
+- Complete type definitions for all controls and options
+- Proper event callback typing with structured data
+- Generic overloads for type-safe parameter handling  
+- Interface definitions for configuration objects
+
+## 📋 API Reference
+
+### Creating a GUI
+
+```typescript
+// Basic GUI creation
+const gui = new GUI();
+
+// With options
+const gui = new GUI({
+  title: 'My Controls',
+  width: 300,
+  autoPlace: false,
+  closeFolders: true
+});
+```
+
+### Adding Controls
+
+```typescript
+// Auto-detected control types
+gui.add(object, 'numberProperty');     // → NumberControl
+gui.add(object, 'booleanProperty');    // → ToggleControl  
+gui.add(object, 'stringProperty');     // → TextControl
+gui.add(object, 'functionProperty');   // → FunctionControl
+
+// Explicit control types
+gui.add(object, 'number', 0, 100, 1);           // NumberControl with range
+gui.add(object, 'option', ['A', 'B', 'C']);     // OptionControl
+gui.addColor(object, 'color');                  // ColorControl
+```
+
+### Event Handling
+
+```typescript
+// Individual control events
+gui.add(params, 'value')
+  .onChange((data: ControlEventData) => {
+    console.log(`${data.property} changed to ${data.value}`);
+  })
+  .onFinishChange((data: ControlEventData) => {
+    console.log('Finished changing:', data);
+  });
+
+// Global GUI events  
+gui.onChange((data: ControlEventData) => {
+  // Called for any control change
+});
+
+gui.onOpenClose((gui: GUI) => {
+  // Called when folders open/close
+});
   doSomething() { 
     console.log('Button clicked!');
   }
@@ -145,7 +232,8 @@ Object.entries(darkTheme).forEach(([key, value]) => {
 
 Explore more examples in the `examples` directory:
 
-- [Basic Controls](examples/index.example.html)
+- **[TypeScript Example](examples/ts-sample/)** - Comprehensive TypeScript demonstration with all control types, event handling, and best practices
+- [Basic Controls](examples/index.example.html) - Simple introduction to rad-gui
 - [Kitchen Sink](examples/kitchen-sink/index.html) - Demonstrates all available controls
 - [Compatibility Demo](examples/dat-gui-compat.html) - Shows compatibility with dat-gui
 

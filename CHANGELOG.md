@@ -3,6 +3,13 @@
 All notable changes to rad-gui will be documented in this file.
 
 
+## [0.11.0] - 2025-07-26
+
+### Added
+- Add RadGUI class with component-based API and comprehensive examples
+
+[0.11.0]: https://github.com/ineffably/rad-gui/compare/v0.10.0...v0.11.0
+
 ## [0.10.0] - 2025-07-25
 
 ### Added

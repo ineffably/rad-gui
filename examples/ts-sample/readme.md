@@ -108,9 +108,13 @@ gui.add(object, 'action');               // Button (function property)
 
 ### RadGUI Explicit Control Creation
 ```typescript
+// Create RadGUI with or without options
+const radGui = new RadGUI();                    // Default options
+const radGui = new RadGUI({ title: 'My GUI' }); // Custom options
+
 // Explicit method calls
 radGui.addNumber(object, 'property', 0, 100, 1);
-radGui.addText(object, 'enabled');       // Note: text representation
+radGui.addToggle(object, 'enabled');      // Proper boolean control
 radGui.addText(object, 'text');
 radGui.addColor(object, 'color');
 radGui.addOption(object, 'mode', ['opt1', 'opt2']);

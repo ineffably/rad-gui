@@ -1,4 +1,4 @@
-import { RadGUI } from '../src/gui';
+import { RadGUI, GUI } from '../src/gui';
 
 describe('RadGUI', () => {
   let gui: RadGUI;
@@ -29,6 +29,17 @@ describe('RadGUI', () => {
       expect(gui.children).toEqual([]);
       expect(gui.controllers).toEqual([]);
       expect(gui.folders).toEqual([]);
+    });
+
+    test('should create RadGUI with no options', () => {
+      const noOptionsGui = new RadGUI();
+      
+      expect(noOptionsGui).toBeInstanceOf(RadGUI);
+      expect(noOptionsGui).toBeInstanceOf(GUI);
+      expect(noOptionsGui.domElement).toBeDefined();
+      expect(noOptionsGui._title).toBe('Controls'); // Default title
+      
+      noOptionsGui.destroy();
     });
 
     test('should accept constructor options', () => {

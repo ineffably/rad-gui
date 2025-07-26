@@ -568,7 +568,7 @@ export class GUI {
 }
 
 export class RadGUI extends GUI {
-  constructor(options: any) {
+  constructor(options?: any) {
     super(options);
   }
 

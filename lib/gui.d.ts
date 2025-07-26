@@ -63,7 +63,7 @@ export declare class GUI {
     foldersRecursive(): unknown[];
 }
 export declare class RadGUI extends GUI {
-    constructor(options: any);
+    constructor(options?: any);
     addFolder(title: string): RadGUI;
     addButton(title: string, callback: () => void): FunctionControl;
     addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ColorControl;

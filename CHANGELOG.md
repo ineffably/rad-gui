@@ -3,6 +3,13 @@
 All notable changes to rad-gui will be documented in this file.
 
 
+## [0.11.1] - 2025-07-26
+
+### Added
+- make RadGUI constructor options optional
+
+[0.11.1]: https://github.com/ineffably/rad-gui/compare/v0.11.0...v0.11.1
+
 ## [0.11.0] - 2025-07-26
 
 ### Added

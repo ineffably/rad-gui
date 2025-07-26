@@ -17,8 +17,19 @@
 
 ### Constructor
 ```typescript
-const radGui = new RadGUI(options?: GuiOptions)
+const radGui = new RadGUI();           // With default options
+const radGui = new RadGUI(options);    // With custom options
 ```
+
+**Parameters:**
+- `options` (object, optional): Configuration options - same as GUI class
+  - `title` (string): Title of the GUI (default: 'Controls')
+  - `width` (number): Width in pixels
+  - `autoPlace` (boolean): Whether to automatically append to document.body (default: true)
+  - `container` (HTMLElement): Custom container element
+  - `closeFolders` (boolean): Whether folders should be closed by default
+  - `injectStyles` (boolean): Whether to inject CSS styles (default: true)
+  - `touchStyles` (boolean): Whether to include touch-friendly styles (default: true)
 
 ### Control Methods
 

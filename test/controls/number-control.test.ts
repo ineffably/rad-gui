@@ -825,4 +825,20 @@ describe('NumberControl', () => {
       expect(numberControl._mapRange(100, 0, 100, 100, 200)).toBe(200);
     });
   });
-}); 
+});
+
+describe('NumberControl without window.matchMedia', () => {
+  const original = window.matchMedia;
+  afterEach(() => { window.matchMedia = original; });
+
+  it('constructs as a non-touch text input when matchMedia is missing', () => {
+    (window as any).matchMedia = undefined;
+    const parent: any = {
+      children: [], controllers: [], $children: document.createElement('div'),
+      _callOnChange: jest.fn(), _callOnFinishChange: jest.fn(), add: jest.fn(),
+      root: { $children: document.createElement('div') }
+    };
+    const control = new NumberControl(parent, { n: 5 }, 'n', 0, 100, 1);
+    expect(control.$input.type).toBe('text');
+  });
+});

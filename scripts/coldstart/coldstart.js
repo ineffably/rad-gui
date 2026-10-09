@@ -10,6 +10,8 @@
  *   npm run coldstart -- --no-build    pack lib/ as committed instead of rebuilding it
  *   npm run coldstart -- --strict      exit 1 when a required shape fails
  *   npm run coldstart -- --clean       delete the scratch directory afterwards
+ *   npm run coldstart -- --npm 0.11.0  contrast with that published version (default: latest)
+ *   npm run coldstart -- --no-npm      skip the contrast with the published package
  *
  * Needs network access the first time (npm install in the scratch project).
  */
@@ -22,8 +24,10 @@ const { spawnSync } = require('child_process');
 
 const REPO = path.resolve(__dirname, '..', '..');
 const FIXTURES = path.join(__dirname, 'fixtures');
-const args = new Set(process.argv.slice(2));
+const argv = process.argv.slice(2);
+const args = new Set(argv);
 const BUILD = !args.has('--no-build');
+const NPM_SPEC = args.has('--no-npm') ? null : (argv.includes('--npm') && argv[argv.indexOf('--npm') + 1]) || 'latest';
 
 // Tooling a stranger would install, pinned so baselines stay comparable between runs.
 const TOOLS = {
@@ -37,7 +41,8 @@ const TOOLS = {
 };
 
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'rad-gui-coldstart-'));
-const consumer = path.join(scratch, 'consumer');
+// The scratch project being exercised: the packed branch first, then the published package.
+let consumer = path.join(scratch, 'consumer');
 const bin = (name) => path.join(consumer, 'node_modules', '.bin', name);
 
 function sh(cmd, cwd, env = {}) {
@@ -99,13 +104,13 @@ function pack() {
 
 // ---------------------------------------------------------------- consumer project
 
-function install(tarball) {
+function install(radGuiSpec) {
   fs.mkdirSync(consumer);
   writeJson(path.join(consumer, 'package.json'), {
     name: 'coldstart-consumer',
     private: true,
     version: '1.0.0',
-    dependencies: { 'rad-gui': `file:${path.relative(consumer, tarball)}` },
+    dependencies: { 'rad-gui': radGuiSpec },
     devDependencies: TOOLS
   });
   const res = sh('npm install --no-audit --no-fund --loglevel=error', consumer);
@@ -256,6 +261,21 @@ function withoutMatchMedia(shape) {
   return shape;
 }
 
+function shapeHostCjs() {
+  const cwd = path.join(consumer, 'host-cjs');
+  const shape = { id: 'host-cjs · webpack', required: true,
+    what: "CommonJS host app (require + require('rad-gui/lib/rad-gui.css')) in a webpack production build",
+    ...bundled(cwd, 'webpack', './src/main.js'), cwd };
+  shape.metrics = hostMetrics(shape);
+  // Deep requires CommonJS code tends to use; the exports map decides whether they resolve.
+  for (const [entry, spec] of [['deep-lib-index.js', 'rad-gui/lib/index.js'], ['deep-lib-index-noext.js', 'rad-gui/lib/index'],
+    ['deep-package-json.js', 'rad-gui/package.json']]) {
+    const res = sh(`${bin('webpack')} --config webpack.config.cjs --output-path dist-deep`, cwd, { COLDSTART_ENTRY: `./src/${entry}` });
+    shape.steps.push({ name: `diag: require('${spec}')`, diag: true, tools: WEBPACK_TOOLS, ...res });
+  }
+  return shape;
+}
+
 function hostMetrics(shape) {
   const run = shape.steps.find((s) => s.name === 'run in jsdom');
   const out = path.join(shape.cwd, shape.outDir);
@@ -266,6 +286,7 @@ function hostMetrics(shape) {
     stylesInjected: !!(run && run.result && run.result.stylesInjected),
     radGlobal: run && run.result ? run.result.radGlobal : 'n/a',
     defaultIsGUI: run && run.result && run.result.coldstart ? run.result.coldstart.defaultIsGUI : 'n/a',
+    requireShape: run && run.result && run.result.coldstart ? run.result.coldstart.requireShape : undefined,
     jsBytes: builtFiles(out, '.js').reduce((n, f) => n + fs.statSync(f).size, 0)
   };
 }
@@ -389,9 +410,43 @@ function report(ctx) {
   }
   L.push('');
 
+  if (ctx.npm) L.push(...contrast(ctx), '');
+
   L.push('## What this says', '');
   L.push(...answers(ctx).map((a) => `- ${a}`), '');
   return L.join('\n');
+}
+
+function contrast(ctx) {
+  const L = [];
+  const npmLabel = `npm rad-gui@${ctx.npm.version}`;
+  L.push(`## Contrast: this branch vs ${npmLabel} (installed from the registry, same tools)`, '');
+  L.push(`| shape | branch | ${npmLabel} | where they differ |`, '|---|---|---|---|');
+  const npmById = Object.fromEntries(ctx.npm.shapes.map((s) => [s.id, s]));
+  for (const shape of ctx.shapes) {
+    const other = npmById[shape.id];
+    const a = shapeStatus(shape);
+    const b = other ? shapeStatus(other) : 'n/a';
+    const diffs = [];
+    if (other) {
+      shape.steps.forEach((s) => {
+        const o = other.steps.find((x) => x.name === s.name);
+        if (o && o.ok !== s.ok) diffs.push(`${s.name}: branch ${s.ok ? 'ok' : 'fails'}, npm ${o.ok ? 'ok' : `fails (${firstLine(o.out)})`}`);
+      });
+    }
+    L.push(`| ${shape.id} | ${a} | ${b} | ${diffs.join('; ').replace(/\|/g, '\\|') || (a === b ? 'same' : '')} |`);
+  }
+  const failing = ctx.npm.shapes.filter((s) => shapeStatus(s) === 'FAIL');
+  if (failing.length) {
+    L.push('', `### ${npmLabel}: failing steps`, '');
+    for (const shape of failing) {
+      L.push(`FAIL  ${shape.id}`);
+      for (const s of shape.steps.filter((x) => !x.ok && !x.diag)) {
+        L.push(`      FAIL ${s.name}: ${s.cmd}`, ...tail(s.out, 8).split('\n').map((l) => `             | ${l}`));
+      }
+    }
+  }
+  return L;
 }
 
 function yn(b) {
@@ -402,7 +457,7 @@ function answers(ctx) {
   const byId = Object.fromEntries(ctx.shapes.map((s) => [s.id, s]));
   const pass = (id) => byId[id] && shapeStatus(byId[id]) === 'PASS';
   const out = [];
-  const bundlers = ['esm · webpack', 'esm · vite', 'cjs · webpack', 'host · vite', 'host · webpack'];
+  const bundlers = ['esm · webpack', 'esm · vite', 'cjs · webpack', 'host · vite', 'host · webpack', 'host-cjs · webpack'];
   out.push(`Pre-bundled UMD lib/index.js through a bundler: ${bundlers.map((id) => `${id} ${pass(id) ? 'pass' : 'FAIL'}`).join(', ')}.`);
   const nodeEsm = byId['node · import()'];
   const nodeRes = nodeEsm && nodeEsm.steps[0].result;
@@ -425,6 +480,14 @@ function answers(ctx) {
     }
     out.push(`${id} vs as shipped — ${diffs.join('; ')}.`);
   }
+  const cjsHost = byId['host-cjs · webpack'];
+  if (cjsHost) {
+    const shapeInfo = cjsHost.metrics.requireShape;
+    out.push(`CommonJS host (webpack, production): ${pass(cjsHost.id) ? 'pass' : `FAIL — ${firstLine(cjsHost.steps.find((s) => !s.ok).out)}`}` +
+      (shapeInfo ? `; require('rad-gui') gives GUI ${shapeInfo.GUI}, default ${shapeInfo.default}${shapeInfo.callable ? ', callable' : ', not callable'}` : '') + '.');
+    const deep = cjsHost.steps.filter((s) => s.name.startsWith("diag: require("));
+    out.push(`Deep requires: ${deep.map((s) => `${s.name.slice(6)} ${s.ok ? 'resolves' : `fails (${firstLine(s.out)})`}`).join('; ')}.`);
+  }
   const bare = byId['host · webpack'].steps.find((s) => s.name.includes('without a matchMedia'));
   if (bare) {
     out.push(bare.ok
@@ -444,21 +507,36 @@ function answers(ctx) {
 
 // ---------------------------------------------------------------- main
 
+function runShapes() {
+  const shapes = [shapeEsm('webpack'), shapeEsm('vite'), shapeCjs(), shapeTs(), shapeHost('vite'),
+    withoutMatchMedia(shapeHost('webpack')), shapeHostCjs(), shapeNode('esm'), shapeNode('cjs')];
+  const blocks = quickStartBlocks() || {};
+  for (const lang of ['javascript', 'typescript']) if (blocks[lang]) shapes.push(shapeQuickStart(lang, blocks[lang]));
+  return shapes;
+}
+
 function main() {
   console.log(`coldstart: scratch ${scratch}`);
   console.log(`coldstart: ${BUILD ? 'building and packing' : 'packing committed lib/'}...`);
   const packed = pack();
   console.log(`coldstart: installing ${path.basename(packed.tarball)} + tooling (network)...`);
-  install(packed.tarball);
+  install(`file:${path.relative(consumer, packed.tarball)}`);
   const ctx = { pack: packed, versions: versions(), shapes: [] };
 
   console.log('coldstart: building and running shapes...');
-  ctx.shapes.push(shapeEsm('webpack'), shapeEsm('vite'), shapeCjs(), shapeTs(), shapeHost('vite'), withoutMatchMedia(shapeHost('webpack')));
-  ctx.shapes.push(shapeNode('esm'), shapeNode('cjs'));
-  const blocks = quickStartBlocks() || {};
-  for (const lang of ['javascript', 'typescript']) if (blocks[lang]) ctx.shapes.push(shapeQuickStart(lang, blocks[lang]));
+  ctx.shapes = runShapes();
   console.log('coldstart: probing package.json fields...');
   ctx.probes = probes();
+
+  if (NPM_SPEC) {
+    const branchConsumer = consumer;
+    consumer = path.join(scratch, 'consumer-npm');
+    console.log(`coldstart: installing rad-gui@${NPM_SPEC} from the npm registry for contrast (network)...`);
+    install(`${NPM_SPEC}`);
+    const version = require(path.join(consumer, 'node_modules', 'rad-gui', 'package.json')).version;
+    ctx.npm = { spec: NPM_SPEC, version, shapes: runShapes() };
+    consumer = branchConsumer;
+  }
 
   const text = report(ctx);
   fs.writeFileSync(path.join(scratch, 'report.md'), text + '\n');

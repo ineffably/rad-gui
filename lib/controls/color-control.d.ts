@@ -10,6 +10,7 @@ export default class ColorControl extends BaseControl {
     constructor(parent: any, object: any, property: any, rgbScale: any);
     reset(): this;
     _setValueFromHexString(value: any): void;
+    isModified(): boolean;
     save(): any;
     load(value: any): this;
     update(): this;

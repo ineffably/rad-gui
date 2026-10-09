@@ -5,11 +5,14 @@
   "types": "lib/index.d.ts",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "import": "./lib/index.js",
-      "require": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "require": "./lib/index.js"
     },
-    "./lib/rad-gui.css": "./lib/rad-gui.css"
+    "./lib/rad-gui.css": {
+      "types": "./lib/rad-gui.d.css.ts",
+      "default": "./lib/rad-gui.css"
+    }
   },
   "files": [
     "lib/**/*",

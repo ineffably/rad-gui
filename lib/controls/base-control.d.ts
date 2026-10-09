@@ -40,6 +40,9 @@ export default class BaseControl {
     update(): this;
     load(value: any): this;
     save(): any;
+    updateDisplay(): this;
+    isModified(): boolean;
+    remove(): this;
     destroy(): void;
 }
 export { BaseControl };

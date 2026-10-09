@@ -58,7 +58,7 @@ gui.addColor(params, 'color');
 
 ### TypeScript  
 ```typescript
-import { GUI, ControlEventData } from 'rad-gui';
+import { GUI } from 'rad-gui';
 import 'rad-gui/lib/rad-gui.css';
 
 interface DemoParams {
@@ -73,8 +73,8 @@ const params: DemoParams = { x: 0, y: 0, color: '#ff0000', enabled: true };
 
 // Full type safety and IntelliSense support
 gui.add(params, 'x', 0, 100)
-  .onChange((data: ControlEventData<number>) => {
-    console.log(`X changed to ${data.value}`);
+  .onChange((value: number) => {
+    console.log(`X changed to ${value}`);
   });
 
 gui.addColor(params, 'color');
@@ -88,7 +88,7 @@ For a complete example, see our [TypeScript Example](examples/ts-sample/) which 
 RAD-GUI provides comprehensive type definitions and IntelliSense support for TypeScript projects. The library includes:
 
 - Complete type definitions for all controls and options
-- Proper event callback typing with structured data
+- Typed event callbacks (a control's `onChange` receives the new value, as in lil-gui and dat.GUI)
 - Generic overloads for type-safe parameter handling  
 - Interface definitions for configuration objects
 
@@ -129,16 +129,16 @@ gui.addColor(object, 'color');                  // ColorControl
 ```typescript
 // Individual control events
 gui.add(params, 'value')
-  .onChange((data: ControlEventData) => {
-    console.log(`${data.property} changed to ${data.value}`);
+  .onChange((value: number) => {
+    console.log(`value changed to ${value}`);
   })
-  .onFinishChange((data: ControlEventData) => {
-    console.log('Finished changing:', data);
+  .onFinishChange((value: number) => {
+    console.log('Finished changing:', value);
   });
 
-// Global GUI events  
-gui.onChange((data: ControlEventData) => {
-  // Called for any control change
+// Global GUI events receive { object, property, value, controller }
+gui.onChange((event: { object: any; property: string; value: unknown; controller: unknown }) => {
+  console.log(`${event.property} changed to ${event.value}`);
 });
 
 gui.onOpenClose((gui: GUI) => {
@@ -294,7 +294,7 @@ Packs rad-gui, installs only the tarball plus pinned off-the-shelf tooling (Vite
 
 - **esm · webpack / esm · vite**: `import { GUI } from 'rad-gui'` plus `import 'rad-gui/lib/rad-gui.css'`, production bundle
 - **cjs · webpack**: `require('rad-gui')` in a bundled app
-- **ts · tsc + vite**: imports `GUI` and `ControlEventData` and typechecks against the shipped types (bundler and node16 resolution)
+- **ts · tsc + vite**: imports `GUI` and typechecks against the shipped types (bundler and node16 resolution)
 - **host · vite / host · webpack**: a host app with its own code and CSS that bundles rad-gui into its production build
 - **host-cjs · webpack**: the same host app written in CommonJS (`require`), plus deep requires such as `rad-gui/lib/index` and `rad-gui/package.json`
 - **node · import() / require()**: no bundler, which shows whether native ESM consumers get named exports

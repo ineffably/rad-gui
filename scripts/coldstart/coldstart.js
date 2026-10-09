@@ -237,13 +237,12 @@ function shapeTs() {
   const steps = [
     step('typecheck (moduleResolution bundler)', `${tsc} -p tsconfig.json`, cwd, { tools: ['typescript'] }),
     step('typecheck (node16, type: module)', `${tsc} -p tsconfig.json`, node16, { tools: ['typescript'] }),
-    step('diag: typecheck without ControlEventData', `${tsc} -p tsconfig.gui-only.json`, cwd, { diag: true, tools: ['typescript'] }),
     step('diag: typecheck with skipLibCheck false', `${tsc} -p tsconfig.libcheck.json`, cwd, { diag: true, tools: ['typescript'] })
   ];
   const built = viteBuild(cwd);
   steps.push(built);
   if (built.ok) steps.push(runOutput(cwd, 'dist'));
-  return { id: 'ts · tsc + vite', required: true, what: 'imports GUI and ControlEventData, compiles against shipped types, then runs', steps, cwd };
+  return { id: 'ts · tsc + vite', required: true, what: 'imports GUI, compiles against shipped types, then runs', steps, cwd };
 }
 
 function shapeHost(bundler, cwd = path.join(consumer, 'host'), id = `host · ${bundler}`) {

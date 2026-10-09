@@ -1,4 +1,4 @@
-// Same consumer without ControlEventData, to tell a missing type apart from unusable types.
+// GUI-only consumer, used to typecheck the shipped declarations with skipLibCheck false.
 import { GUI } from 'rad-gui';
 
 const params = { x: 1 };

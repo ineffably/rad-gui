@@ -58,7 +58,7 @@
   "homepage": "https://github.com/ineffably/rad-gui#readme",
   "devDependencies": {
     "@testing-library/dom": "^10.4.2",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@types/jest": "^30.0.0",
     "bundle-stats-webpack-plugin": "^4.22.3",
     "css-loader": "^7.1.5",
@@ -75,7 +75,7 @@
     "typedoc-plugin-pages": "^1.1.0",
     "typescript": "^5.9.3",
     "webpack": "^5.111.1",
-    "webpack-cli": "^6.0.1",
+    "webpack-cli": "^7.2.3",
     "webpack-dev-server": "^6.0.0"
   }
 }

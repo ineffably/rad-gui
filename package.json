@@ -25,6 +25,7 @@
     "test:coverage": "jest --coverage",
     "test:typescript": "cd test/typescript && npx tsc --noEmit --project tsconfig.json",
     "test:all": "npm run test && npm run test:typescript",
+    "coldstart": "node scripts/coldstart/coldstart.js",
     "docs": "typedoc --entryPoints readme.md usage.md src/**/*.ts --entryPointStrategy expand",
     "local": "webpack-dev-server --mode=development",
     "local:example": "webpack-dev-server --mode=development --env template=examples/index.example.html",

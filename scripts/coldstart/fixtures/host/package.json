@@ -1,0 +1,8 @@
+{
+  "name": "host-app",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "rad-gui": "*"
+  }
+}

@@ -252,3 +252,22 @@ npm run test
 # View demo
 npm run local:kitchen-sink
 ```
+
+### Coldstart: consume the package like a stranger
+
+```bash
+npm run coldstart                 # build like release.yml, npm pack, test the tarball
+npm run coldstart -- --no-build   # pack lib/ as committed instead
+```
+
+Packs rad-gui, installs only the tarball plus pinned off-the-shelf tooling (Vite, webpack, TypeScript, jsdom) into a scratch project in the OS temp directory, and builds and runs each consumer shape in a headless document. Each shape creates a GUI, adds a number control, sets it and checks that onChange fired:
+
+- **esm · webpack / esm · vite**: `import { GUI } from 'rad-gui'` plus `import 'rad-gui/lib/rad-gui.css'`, production bundle
+- **cjs · webpack**: `require('rad-gui')` in a bundled app
+- **ts · tsc + vite**: imports `GUI` and `ControlEventData` and typechecks against the shipped types (bundler and node16 resolution)
+- **host · vite / host · webpack**: a host app with its own code and CSS that bundles rad-gui into its production build
+- **node · import() / require()**: no bundler, which shows whether native ESM consumers get named exports
+- **quickstart**: the Quick Start blocks from the packed readme, verbatim
+- **package.json probes**: the host app rebuilt with `sideEffects` and `module` changed, to show whether those fields matter
+
+It prints pass or fail per shape with the command, the tool versions and the raw error, and saves `report.md` in the scratch directory. It needs network access for the scratch install. `--strict` exits 1 when a required shape fails; `--clean` deletes the scratch directory. The harness lives in `scripts/coldstart/` and is not part of the published package.

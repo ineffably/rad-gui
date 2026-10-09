@@ -88,6 +88,10 @@ export default class ColorControl extends BaseControl {
     }
   }
 
+  isModified() {
+    return this.save() !== this._initialValueHexString;
+  }
+
   save() {
     return this._format.toHexString(this.getValue(), this._rgbScale);
   }

@@ -58,7 +58,7 @@ gui.addColor(params, 'color');
 
 ### TypeScript  
 ```typescript
-import { GUI, ControlEventData } from 'rad-gui';
+import { GUI } from 'rad-gui';
 import 'rad-gui/lib/rad-gui.css';
 
 interface DemoParams {
@@ -73,8 +73,8 @@ const params: DemoParams = { x: 0, y: 0, color: '#ff0000', enabled: true };
 
 // Full type safety and IntelliSense support
 gui.add(params, 'x', 0, 100)
-  .onChange((data: ControlEventData<number>) => {
-    console.log(`X changed to ${data.value}`);
+  .onChange((value: number) => {
+    console.log(`X changed to ${value}`);
   });
 
 gui.addColor(params, 'color');
@@ -88,7 +88,7 @@ For a complete example, see our [TypeScript Example](examples/ts-sample/) which 
 RAD-GUI provides comprehensive type definitions and IntelliSense support for TypeScript projects. The library includes:
 
 - Complete type definitions for all controls and options
-- Proper event callback typing with structured data
+- Typed event callbacks (a control's `onChange` receives the new value, as in lil-gui and dat.GUI)
 - Generic overloads for type-safe parameter handling  
 - Interface definitions for configuration objects
 
@@ -129,16 +129,16 @@ gui.addColor(object, 'color');                  // ColorControl
 ```typescript
 // Individual control events
 gui.add(params, 'value')
-  .onChange((data: ControlEventData) => {
-    console.log(`${data.property} changed to ${data.value}`);
+  .onChange((value: number) => {
+    console.log(`value changed to ${value}`);
   })
-  .onFinishChange((data: ControlEventData) => {
-    console.log('Finished changing:', data);
+  .onFinishChange((value: number) => {
+    console.log('Finished changing:', value);
   });
 
-// Global GUI events  
-gui.onChange((data: ControlEventData) => {
-  // Called for any control change
+// Global GUI events receive { object, property, value, controller }
+gui.onChange((event: { object: any; property: string; value: unknown; controller: unknown }) => {
+  console.log(`${event.property} changed to ${event.value}`);
 });
 
 gui.onOpenClose((gui: GUI) => {
@@ -237,6 +237,34 @@ Explore more examples in the `examples` directory:
 - [Kitchen Sink](examples/kitchen-sink/index.html) - Demonstrates all available controls
 - [Compatibility Demo](examples/dat-gui-compat.html) - Shows compatibility with dat-gui
 
+## 🔁 dat.gui compatibility
+
+rad-gui covers the documented dat.gui API ([examples/dat-gui-API.md](examples/dat-gui-API.md)) except where noted below. Code written for dat.gui should run after changing `dat.GUI` to `rad.GUI`, or importing `GUI` from `rad-gui`.
+
+**Covered**
+
+| dat.gui | rad-gui |
+| --- | --- |
+| `new GUI({ name, parent, autoPlace, closed, hideable, load })` | Same options. `name` is an alias for `title`. `hideable` defaults to `false` (see below). |
+| `gui.domElement`, `parent`, `autoPlace`, `width`, `name`, `closed`, `preset` | Same properties. Setting `width`, `name` or `closed` updates the GUI. |
+| `add(object, property, [min], [max], [step])`, `add(object, property, options)` | Same. |
+| `addColor`, `addFolder`, `open`, `close`, `show`, `hide`, `destroy` | Same. |
+| `remove(controller)`, `removeFolder(folder)`, `getRoot()` | Same. |
+| `remember(object)`, `getSaveObject()`, `new GUI({ load })` | Same JSON format: values of remembered objects are saved under the preset name and recalled when their controllers are added. |
+| Controller `domElement`, `object`, `property`, `options`, `name`, `listen`, `remove`, `onChange`, `onFinishChange`, `setValue`, `getValue`, `updateDisplay`, `isModified` | Same. |
+| NumberController `min`, `max`, `step` | Same; also `setMin`, `setMax`, `setStep`. |
+
+**Not covered, or different**
+
+- **Preset UI and localStorage:** `useLocalStorage`, and the save/new/revert buttons and preset dropdown that `remember()` adds in dat.gui, are left out. Use `getSaveObject()` and the `load` option, and store the JSON yourself.
+- **`gui.load` property:** in dat.gui this holds the presets. In rad-gui, `gui.load(state)` is a method that restores `save()` state, so the property name stays taken. Pass presets as the `load` constructor option instead.
+- **`closeOnTop`:** accepted but has no effect; the title bar is always on top.
+- **`hideable`:** opt-in (`hideable: true`), so the H key never hides a GUI unless you ask for it. dat.gui defaults to `true`.
+- **Duplicate folder names:** `addFolder` allows them; dat.gui throws.
+- **Unsupported values:** `add()` logs an error and returns `undefined`; dat.gui throws.
+- **Default number step:** without an explicit step, rad-gui uses 1/1000 of the range (or 0.1 without a range), not dat.gui's 1% or 1.
+- **Undocumented internals** such as `__controllers` and `__folders` are not provided; use `controllers` and `folders`.
+
 ## 🧪 Development
 
 ```bash
@@ -252,3 +280,26 @@ npm run test
 # View demo
 npm run local:kitchen-sink
 ```
+
+### Coldstart: consume the package like a stranger
+
+```bash
+npm run coldstart                 # build like release.yml, npm pack, test the tarball
+npm run coldstart -- --no-build   # pack lib/ as committed instead
+npm run coldstart -- --npm 0.11.0 # contrast with that published version (default: latest)
+npm run coldstart -- --no-npm     # skip the contrast with the published package
+```
+
+Packs rad-gui, installs only the tarball plus pinned off-the-shelf tooling (Vite, webpack, TypeScript, jsdom) into a scratch project in the OS temp directory, and builds and runs each consumer shape in a headless document. Each shape creates a GUI, adds a number control, sets it and checks that onChange fired:
+
+- **esm · webpack / esm · vite**: `import { GUI } from 'rad-gui'` plus `import 'rad-gui/lib/rad-gui.css'`, production bundle
+- **cjs · webpack**: `require('rad-gui')` in a bundled app
+- **ts · tsc + vite**: imports `GUI` and typechecks against the shipped types (bundler and node16 resolution)
+- **host · vite / host · webpack**: a host app with its own code and CSS that bundles rad-gui into its production build
+- **host-cjs · webpack**: the same host app written in CommonJS (`require`), plus deep requires such as `rad-gui/lib/index` and `rad-gui/package.json`
+- **node · import() / require()**: no bundler, which shows whether native ESM consumers get named exports
+- **quickstart**: the Quick Start blocks from the packed readme, verbatim
+- **package.json probes**: the host app rebuilt with `sideEffects` and `module` changed, to show whether those fields matter
+- **contrast with npm**: every shape is run again against the published package from the registry, and a table shows where this branch and the release differ
+
+It prints pass or fail per shape with the command, the tool versions and the raw error, and saves `report.md` in the scratch directory. It needs network access for the scratch install. `--strict` exits 1 when a required shape fails; `--clean` deletes the scratch directory. The harness lives in `scripts/coldstart/` and is not part of the published package.

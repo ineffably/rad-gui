@@ -59,6 +59,13 @@ export default class BaseControl {
 		this.parent = parent;
 		this.object = object;
 		this.property = property;
+
+		// dat.gui load/remember: start from the saved value when the root GUI has one
+		const recalled = parent.root?._recallValue?.( object, property );
+		if ( recalled !== undefined ) {
+			object[ property ] = recalled;
+		}
+
 		this.initialValue = this.getValue();
 
     this.$name = el('div', {
@@ -327,6 +334,31 @@ export default class BaseControl {
    */
 	save() {
 		return this.getValue();
+	}
+
+  /**
+   * dat.gui compatibility: alias for update()
+   * @returns This controller instance (for chaining)
+   */
+	updateDisplay() {
+		return this.update();
+	}
+
+  /**
+   * dat.gui compatibility: whether the value differs from the initial value
+   * @returns True if the value has changed
+   */
+	isModified() {
+		return this.getValue() !== this.initialValue;
+	}
+
+  /**
+   * dat.gui compatibility: removes the controller from its parent GUI
+   * @returns This controller instance
+   */
+	remove() {
+		this.destroy();
+		return this;
 	}
 
   /**

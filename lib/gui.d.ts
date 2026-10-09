@@ -9,7 +9,8 @@ import BaseControl from './controls/base-control';
 export declare class GUI {
     parent: GUI;
     autoPlace: boolean;
-    width: any;
+    closeOnTop: boolean;
+    preset: string;
     closeFolders: boolean;
     injectStyles: boolean;
     touchStyles: boolean;
@@ -31,7 +32,20 @@ export declare class GUI {
     _onFinishChangeCallback: any;
     _onChangeCallback: any;
     _onOpenCloseCallback: any;
-    constructor({ parent, autoPlace, container, width, title, closeFolders, injectStyles: shouldInjectStyles, touchStyles }?: any);
+    _width: number | undefined;
+    _rememberedObjects: any[];
+    _loadData: any;
+    static _hideables: Set<GUI>;
+    static _hiddenByKey: boolean;
+    static _hideKeyBound: boolean;
+    constructor({ parent, autoPlace, container, width, name, title, closeFolders, injectStyles: shouldInjectStyles, touchStyles, closed, hideable, load, preset, closeOnTop }?: any);
+    static _bindHideKey(): void;
+    get width(): number | undefined;
+    set width(width: number | undefined);
+    get name(): string;
+    set name(name: string);
+    get closed(): boolean;
+    set closed(closed: boolean);
     add<T, K extends keyof T>(object: T, property: K): NumberControl | ToggleControl | TextControl | FunctionControl;
     add<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl;
     add<T, K extends keyof T>(object: T, property: K, min: number, max: number): NumberControl;
@@ -39,7 +53,13 @@ export declare class GUI {
     addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ColorControl;
     addFolder(title: string): GUI;
     load(obj: any, recursive?: boolean): this;
-    remember(...args: any[]): void;
+    remember(...objects: any[]): void;
+    _recallValue(object: any, property: any): any;
+    getRoot(): GUI;
+    getSaveObject(): any;
+    _currentPreset(): Record<number, Record<string, any>>;
+    remove(controller: BaseControl): this;
+    removeFolder(folder: GUI): this;
     save(recursive?: boolean): {
         controllers: {};
         folders: {};
@@ -73,7 +93,7 @@ export declare class RadGUI extends GUI {
     addToggle<T, K extends keyof T>(object: T, property: K): ToggleControl;
     addOption<T, K extends keyof T>(object: T, property: K, options: T[K][] | Record<string, T[K]>): OptionControl;
     addText<T, K extends keyof T>(object: T, property: K): TextControl;
-    remove(controller: BaseControl): void;
+    remove(controller: BaseControl): this;
     reset(recursive?: boolean): this;
 }
 export default GUI;

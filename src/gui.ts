@@ -19,8 +19,10 @@ export class GUI {
   parent: GUI;
   /** Whether to automatically place the GUI in the document body */
   autoPlace: boolean;
-  /** Width of the GUI in pixels */
-  width: any;
+  /** dat.gui compatibility: accepted, but the title bar is always on top */
+  closeOnTop: boolean;
+  /** dat.gui compatibility: name of the preset that remembered values are saved under */
+  preset: string;
   /** Whether folders should be closed by default */
   closeFolders: boolean;
   /** Whether to inject CSS styles */
@@ -60,6 +62,17 @@ export class GUI {
   _onFinishChangeCallback: any;
   _onChangeCallback: any;
   _onOpenCloseCallback: any;
+  /** Width in pixels set through the constructor or the width property */
+  _width: number | undefined;
+  /** Objects registered with remember(), kept on the root GUI */
+  _rememberedObjects: any[];
+  /** Saved state passed as the load option (or the matching part of the parent's) */
+  _loadData: any;
+
+  /** Root GUIs created with hideable: true, toggled together by the H key */
+  static _hideables = new Set<GUI>();
+  static _hiddenByKey = false;
+  static _hideKeyBound = false;
 
   /**
    * Creates a new GUI instance
@@ -72,18 +85,35 @@ export class GUI {
    * @param options.closeFolders - Whether folders should be closed by default
    * @param options.injectStyles - Whether to inject CSS styles
    * @param options.touchStyles - Whether to include touch-friendly styles
+   * @param options.name - dat.gui compatibility: alias for title
+   * @param options.closed - Whether the GUI starts closed
+   * @param options.hideable - Whether pressing H shows and hides this root GUI (default false)
+   * @param options.load - Saved state from getSaveObject(), recalled for remembered objects
+   * @param options.preset - Preset to recall from load (default load.preset or 'Default')
+   * @param options.closeOnTop - dat.gui compatibility: accepted, no effect
    */
   constructor({
     parent,
     autoPlace = parent === undefined,
     container,
     width,
-    title = 'Controls',
+    name,
+    title = name ?? 'Controls',
     closeFolders = false,
     injectStyles: shouldInjectStyles = true,
-    touchStyles = true
+    touchStyles = true,
+    closed = false,
+    hideable = false,
+    load,
+    preset,
+    closeOnTop = false
   } = {} as any) {
     this.parent = parent;
+    this.autoPlace = autoPlace;
+    this.closeOnTop = closeOnTop;
+    this._rememberedObjects = [];
+    this._loadData = load ?? parent?._loadData?.folders?.[title];
+    this.preset = preset ?? this._loadData?.preset ?? 'Default';
     this.root = parent ? parent.root : this;
     this.children = [];
     this.controllers = [];
@@ -137,10 +167,74 @@ export class GUI {
     }
 
     if (width) {
-      this.domElement.style.setProperty('--width', width + 'px');
+      this.width = width;
     }
 
     this._closeFolders = closeFolders;
+
+    if (closed || this._loadData?.closed) {
+      this.close();
+    }
+
+    if (hideable && !parent) {
+      GUI._hideables.add(this);
+      GUI._bindHideKey();
+    }
+  }
+
+  /**
+   * Listens for the H key once per page and toggles every hideable GUI
+   * @private
+   */
+  static _bindHideKey() {
+    if (GUI._hideKeyBound || typeof window === 'undefined') return;
+    GUI._hideKeyBound = true;
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key !== 'h' && e.key !== 'H') return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const target = e.target as HTMLElement;
+      if (target && (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) || target.isContentEditable)) return;
+      GUI._hiddenByKey = !GUI._hiddenByKey;
+      GUI._hideables.forEach(gui => gui.show(!GUI._hiddenByKey));
+    });
+  }
+
+  /**
+   * Width of the GUI in pixels (undefined means the stylesheet default)
+   */
+  get width(): number | undefined {
+    return this._width;
+  }
+
+  set width(width: number | undefined) {
+    this._width = width;
+    if (width === undefined || width === null) {
+      this.domElement.style.removeProperty('--width');
+    } else {
+      this.domElement.style.setProperty('--width', width + 'px');
+    }
+  }
+
+  /**
+   * dat.gui compatibility: the GUI's title, used as the folder name
+   */
+  get name(): string {
+    return this._title;
+  }
+
+  set name(name: string) {
+    this.title(name);
+  }
+
+  /**
+   * Whether the GUI is closed (folded); setting it opens or closes the GUI
+   */
+  get closed(): boolean {
+    return this._closed;
+  }
+
+  set closed(closed: boolean) {
+    this.open(!closed);
   }
 
   /**
@@ -231,11 +325,9 @@ export class GUI {
    * @returns The created folder (GUI instance)
    */
   addFolder(title: string): GUI {
+    // The GUI constructor registers the folder in this.folders and this.children
     const folder = new GUI({ parent: this, title });
-    
-    // Add the folder to the parent's folders array
-    this.folders.push(folder);
-    
+
     // Add the folder's DOM element to the parent's $children element
     this.$children.appendChild(folder.domElement);
     
@@ -272,10 +364,95 @@ export class GUI {
   }
 
   /**
-   * Alias for save(true)
+   * Registers objects whose values getSaveObject() stores and the load option recalls (dat.gui)
+   * @param objects - Objects to remember; call before adding their controllers
    */
-  remember(...args) {
+  remember(...objects: any[]) {
+    // Earlier versions only called save(true); keep that so its duplicate-name check still applies
     this.save(true);
+    const remembered = this.root._rememberedObjects;
+    objects.forEach(obj => {
+      if (obj && typeof obj === 'object' && !remembered.includes(obj)) remembered.push(obj);
+    });
+  }
+
+  /**
+   * Value saved for a remembered object's property in the current preset, if any
+   * @private
+   */
+  _recallValue(object: any, property: any) {
+    const index = this._rememberedObjects.indexOf(object);
+    if (index === -1) return undefined;
+    return this._loadData?.remembered?.[this.preset]?.[index]?.[property];
+  }
+
+  /**
+   * dat.gui compatibility: the root GUI of a nested folder
+   * @returns The topmost GUI
+   */
+  getRoot(): GUI {
+    return this.root;
+  }
+
+  /**
+   * dat.gui compatibility: saved state in dat.gui's format, which the load option accepts
+   * @returns { preset, closed, remembered, folders } for the root; { closed, folders } for folders
+   */
+  getSaveObject() {
+    const saved: any = { ...(this._loadData || {}) };
+    saved.closed = this._closed;
+
+    if (this === this.root && this._rememberedObjects.length > 0) {
+      saved.preset = this.preset;
+      saved.remembered = { ...(saved.remembered || {}), [this.preset]: this._currentPreset() };
+    }
+
+    saved.folders = {};
+    this.folders.forEach(folder => {
+      saved.folders[folder._title] = folder.getSaveObject();
+    });
+    return saved;
+  }
+
+  /**
+   * Values of the remembered objects' controlled properties, keyed by remember order
+   * @private
+   */
+  _currentPreset() {
+    const controllers = this.controllersRecursive();
+    const preset: Record<number, Record<string, any>> = {};
+    this._rememberedObjects.forEach((obj, index) => {
+      const values: Record<string, any> = {};
+      controllers
+        .filter(c => c.object === obj && !(c instanceof FunctionControl))
+        .forEach(c => { values[c.property] = c.getValue(); });
+      preset[index] = values;
+    });
+    return preset;
+  }
+
+  /**
+   * Removes a controller from this GUI (dat.gui gui.remove)
+   * @param controller - The controller to remove
+   * @returns This GUI instance (for chaining)
+   */
+  remove(controller: BaseControl) {
+    if (this.controllers.includes(controller)) {
+      controller.destroy();
+    }
+    return this;
+  }
+
+  /**
+   * Removes a folder from this GUI (dat.gui gui.removeFolder)
+   * @param folder - The folder to remove
+   * @returns This GUI instance (for chaining)
+   */
+  removeFolder(folder: GUI) {
+    if (this.folders.includes(folder)) {
+      folder.destroy();
+    }
+    return this;
   }
 
   /**
@@ -517,6 +694,7 @@ export class GUI {
    * Removes the GUI from the DOM and parent
    */
   destroy() {
+    GUI._hideables.delete(this);
     if (this.parent) {
       this.parent.children.splice(this.parent.children.indexOf(this), 1);
       this.parent.folders.splice(this.parent.folders.indexOf(this), 1);
@@ -612,7 +790,7 @@ export class RadGUI extends GUI {
     return text;
   }
 
-  remove(controller: BaseControl) {
+  remove(controller: BaseControl): this {
     const childIndex = this.children.indexOf(controller);
     if (childIndex !== -1) {
       this.children.splice(childIndex, 1);
@@ -626,6 +804,7 @@ export class RadGUI extends GUI {
     if (controller.domElement && controller.domElement.parentNode === this.$children) {
       this.$children.removeChild(controller.domElement);
     }
+    return this;
   }
 
   reset(recursive = true) {

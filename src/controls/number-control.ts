@@ -249,7 +249,8 @@ export default class NumberControl extends BaseControl {
 
 	// DOM initialization
 	private _initInput(): void {
-		const isTouch = window.matchMedia('(pointer: coarse)').matches;
+		const isTouch = typeof window.matchMedia === 'function' &&
+			window.matchMedia('(pointer: coarse)').matches;
 
 		// Create input with event handlers
 		this.$input = el('input', {

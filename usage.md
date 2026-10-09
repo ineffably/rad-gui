@@ -23,7 +23,7 @@ const gui = new GUI();
 
 ### TypeScript
 ```typescript
-import { GUI, ControlEventData, GuiOptions } from 'rad-gui';
+import { GUI, GuiOptions } from 'rad-gui';
 import 'rad-gui/lib/rad-gui.css';
 
 // Define your parameter interface for type safety
@@ -225,22 +225,21 @@ gui.onFinishChange((event) => {
 
 ### TypeScript Event Handling
 ```typescript
-// Type-safe event handling with structured data
-gui.onChange((data: ControlEventData) => {
-  console.log(`Property ${data.property} changed to:`, data.value);
-  console.log('Object:', data.object);
-  console.log('Controller:', data.controller);
+// A GUI-level handler receives { object, property, value, controller }
+gui.onChange((event: { object: any; property: string; value: unknown; controller: unknown }) => {
+  console.log(`Property ${event.property} changed to:`, event.value);
+  console.log('Object:', event.object);
+  console.log('Controller:', event.controller);
 });
 
-// Specific control event handling with type inference
+// A control's own handler receives the raw value, as in lil-gui and dat.GUI
 gui.add(params, 'rotation', 0, 360)
-  .onChange((data: ControlEventData<number>) => {
-    // data.value is typed as number
-    console.log('Rotation changed to:', data.value);
+  .onChange((value: number) => {
+    console.log('Rotation changed to:', value);
   })
-  .onFinishChange((data: ControlEventData<number>) => {
+  .onFinishChange((value: number) => {
     // Called when user stops dragging/typing
-    console.log('Final rotation:', data.value);
+    console.log('Final rotation:', value);
   });
 
 // Open/close events with GUI typing

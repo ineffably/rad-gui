@@ -1,0 +1,8 @@
+{
+  "name": "host-app-cjs",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "rad-gui": "*"
+  }
+}

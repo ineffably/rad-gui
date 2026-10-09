@@ -5,6 +5,22 @@ const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const outDir = 'lib';
 
+// TypeScript 5+ resolves `import './rad-gui.css'` to a sibling `rad-gui.d.css.ts`. Ship one so
+// the CSS side-effect imports (the readme's, and the ones kept in lib/*.d.ts) typecheck.
+class CssDeclarationPlugin {
+  apply(compiler) {
+    const { Compilation, sources } = compiler.webpack;
+    compiler.hooks.thisCompilation.tap('CssDeclarationPlugin', (compilation) => {
+      compilation.hooks.processAssets.tap(
+        { name: 'CssDeclarationPlugin', stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL },
+        () => {
+          compilation.emitAsset('rad-gui.d.css.ts', new sources.RawSource('declare const css: string;\nexport default css;\n'));
+        }
+      );
+    });
+  }
+}
+
 module.exports = (env = {}, argv) => {
   const { mode = 'development' } = argv;
   
@@ -17,6 +33,7 @@ module.exports = (env = {}, argv) => {
     new MiniCssExtractPlugin({
       filename: 'rad-gui.css'
     }),
+    new CssDeclarationPlugin(),
     new webpack.DefinePlugin({
       CSS_CONTENT: JSON.stringify(require('fs').readFileSync(path.join(__dirname, 'src/rad-gui.css'), 'utf8'))
     })

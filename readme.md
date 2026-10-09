@@ -237,6 +237,34 @@ Explore more examples in the `examples` directory:
 - [Kitchen Sink](examples/kitchen-sink/index.html) - Demonstrates all available controls
 - [Compatibility Demo](examples/dat-gui-compat.html) - Shows compatibility with dat-gui
 
+## 🔁 dat.gui compatibility
+
+rad-gui covers the documented dat.gui API ([examples/dat-gui-API.md](examples/dat-gui-API.md)) except where noted below. Code written for dat.gui should run after changing `dat.GUI` to `rad.GUI`, or importing `GUI` from `rad-gui`.
+
+**Covered**
+
+| dat.gui | rad-gui |
+| --- | --- |
+| `new GUI({ name, parent, autoPlace, closed, hideable, load })` | Same options. `name` is an alias for `title`. `hideable` defaults to `false` (see below). |
+| `gui.domElement`, `parent`, `autoPlace`, `width`, `name`, `closed`, `preset` | Same properties. Setting `width`, `name` or `closed` updates the GUI. |
+| `add(object, property, [min], [max], [step])`, `add(object, property, options)` | Same. |
+| `addColor`, `addFolder`, `open`, `close`, `show`, `hide`, `destroy` | Same. |
+| `remove(controller)`, `removeFolder(folder)`, `getRoot()` | Same. |
+| `remember(object)`, `getSaveObject()`, `new GUI({ load })` | Same JSON format: values of remembered objects are saved under the preset name and recalled when their controllers are added. |
+| Controller `domElement`, `object`, `property`, `options`, `name`, `listen`, `remove`, `onChange`, `onFinishChange`, `setValue`, `getValue`, `updateDisplay`, `isModified` | Same. |
+| NumberController `min`, `max`, `step` | Same; also `setMin`, `setMax`, `setStep`. |
+
+**Not covered, or different**
+
+- **Preset UI and localStorage:** `useLocalStorage`, and the save/new/revert buttons and preset dropdown that `remember()` adds in dat.gui, are left out. Use `getSaveObject()` and the `load` option, and store the JSON yourself.
+- **`gui.load` property:** in dat.gui this holds the presets. In rad-gui, `gui.load(state)` is a method that restores `save()` state, so the property name stays taken. Pass presets as the `load` constructor option instead.
+- **`closeOnTop`:** accepted but has no effect; the title bar is always on top.
+- **`hideable`:** opt-in (`hideable: true`), so the H key never hides a GUI unless you ask for it. dat.gui defaults to `true`.
+- **Duplicate folder names:** `addFolder` allows them; dat.gui throws.
+- **Unsupported values:** `add()` logs an error and returns `undefined`; dat.gui throws.
+- **Default number step:** without an explicit step, rad-gui uses 1/1000 of the range (or 0.1 without a range), not dat.gui's 1% or 1.
+- **Undocumented internals** such as `__controllers` and `__folders` are not provided; use `controllers` and `folders`.
+
 ## 🧪 Development
 
 ```bash
